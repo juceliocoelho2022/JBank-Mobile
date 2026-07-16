@@ -2,8 +2,10 @@ package com.jucelio.jbankmobile.data.repository
 
 import com.jucelio.jbankmobile.data.remote.JBankApi
 import com.jucelio.jbankmobile.data.remote.dto.AccountResponseDto
-
-class AccountRepository(
+import javax.inject.Inject
+import javax.inject.Singleton
+@Singleton
+class AccountRepository @Inject constructor(
     private val api: JBankApi
 ) {
 

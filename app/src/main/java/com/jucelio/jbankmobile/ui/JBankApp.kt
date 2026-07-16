@@ -28,7 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import com.jucelio.jbankmobile.AppContainer
 import com.jucelio.jbankmobile.ui.account.AccountScreen
 import com.jucelio.jbankmobile.ui.account.AccountViewModel
-import com.jucelio.jbankmobile.ui.account.AccountViewModelFactory
 import com.jucelio.jbankmobile.ui.dashboard.DashboardViewModel
 import com.jucelio.jbankmobile.ui.home.HomeScreen
 import com.jucelio.jbankmobile.ui.login.LoginScreen
@@ -47,7 +46,7 @@ import com.jucelio.jbankmobile.ui.transaction.TransactionViewModel
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModelFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+import androidx.hilt.navigation.compose.hiltViewModel
 private object Routes {
     const val SPLASH = "splash"
     const val LOGIN = "login"
@@ -229,11 +228,7 @@ fun JBankApp(
          */
 
         composable(Routes.ACCOUNTS) {
-            val accountViewModel: AccountViewModel = viewModel(
-                factory = AccountViewModelFactory(
-                    container.accountRepository
-                )
-            )
+            val accountViewModel: AccountViewModel = hiltViewModel()
 
             AccountScreen(
                 state = accountViewModel.state,

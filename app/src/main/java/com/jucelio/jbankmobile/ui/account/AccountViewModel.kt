@@ -11,16 +11,18 @@ import com.jucelio.jbankmobile.data.repository.AccountRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
-
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 data class AccountUiState(
     val isLoading: Boolean = true,
     val accounts: List<AccountResponseDto> = emptyList(),
     val errorMessage: String? = null
 )
 
-class AccountViewModel(
+@HiltViewModel
+class AccountViewModel @Inject constructor(
     private val repository: AccountRepository
-) : ViewModel() {
+) : ViewModel(){
 
     var state by mutableStateOf(AccountUiState())
         private set
@@ -76,14 +78,3 @@ private fun Throwable.toFriendlyMessage(): String {
     }
 }
 
-class AccountViewModelFactory(
-    private val repository: AccountRepository
-) : ViewModelProvider.Factory {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(
-        modelClass: Class<T>
-    ): T {
-        return AccountViewModel(repository) as T
-    }
-}
