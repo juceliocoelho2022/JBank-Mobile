@@ -1,8 +1,7 @@
 package com.jucelio.jbankmobile.data.remote
 
-import com.jucelio.jbankmobile.BuildConfig
-import com.jucelio.jbankmobile.data.local.TokenStore
-import kotlinx.coroutines.runBlocking
+import com.jucelio.jbankmobile.core.network.AuthInterceptor
+import com.jucelio.jbankmobile.data.local.session.SessionStorage
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,35 +10,48 @@ import java.util.concurrent.TimeUnit
 
 object ApiFactory {
 
-    fun create(tokenStore: TokenStore): JBankApi {
-        val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+    private const val API_BASE_URL =
+        "http://10.0.2.2:8081/"
+
+    fun create(
+        sessionStorage: SessionStorage
+    ): JBankApi {
+        val loggingInterceptor =
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BASIC
+
+                redactHeader("Authorization")
+                redactHeader("Cookie")
+                redactHeader("Set-Cookie")
+            }
+
+        val authInterceptor =
+            AuthInterceptor(sessionStorage)
 
         val client = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val token = runBlocking { tokenStore.getToken() }
-
-                val request = chain.request()
-                    .newBuilder()
-                    .apply {
-                        if (!token.isNullOrBlank()) {
-                            header("Authorization", "Bearer $token")
-                        }
-                    }
-                    .build()
-
-                chain.proceed(request)
-            }
-            .addInterceptor(logging)
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
+            .addInterceptor(authInterceptor)
+            .addInterceptor(loggingInterceptor)
+            .connectTimeout(
+                30,
+                TimeUnit.SECONDS
+            )
+            .readTimeout(
+                30,
+                TimeUnit.SECONDS
+            )
+            .writeTimeout(
+                30,
+                TimeUnit.SECONDS
+            )
+            .retryOnConnectionFailure(true)
             .build()
 
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.API_BASE_URL)
+            .baseUrl(API_BASE_URL)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(
+                GsonConverterFactory.create()
+            )
             .build()
             .create(JBankApi::class.java)
     }

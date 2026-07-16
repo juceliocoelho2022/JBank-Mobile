@@ -1,24 +1,53 @@
 package com.jucelio.jbankmobile.data.repository
 
-import com.jucelio.jbankmobile.data.local.TokenStore
+import com.jucelio.jbankmobile.core.network.ApiResult
+import com.jucelio.jbankmobile.core.network.safeApiCall
+import com.jucelio.jbankmobile.core.session.SessionManager
 import com.jucelio.jbankmobile.data.remote.JBankApi
 import com.jucelio.jbankmobile.data.remote.dto.LoginRequest
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AuthRepository(
+@Singleton
+class AuthRepository @Inject constructor(
     private val api: JBankApi,
-    private val tokenStore: TokenStore
+    private val sessionManager: SessionManager
 ) {
-    suspend fun login(email: String, password: String): Result<Unit> {
-        return runCatching {
-            val response = api.login(LoginRequest(email.trim(), password))
-            require(response.token.isNotBlank()) {
-                "A API retornou um token vazio."
+
+    suspend fun login(
+        email: String,
+        password: String
+    ): ApiResult<Unit> {
+        return when (
+            val result = safeApiCall {
+                api.login(
+                    LoginRequest(
+                        email = email.trim(),
+                        password = password
+                    )
+                )
             }
-            tokenStore.saveToken(response.token)
+        ) {
+            is ApiResult.Success -> {
+                val token = result.data.token
+
+                if (token.isBlank()) {
+                    ApiResult.Error(
+                        type = com.jucelio.jbankmobile.core.network.NetworkError.UNKNOWN,
+                        message = "A API retornou um token vazio."
+                    )
+                } else {
+                    sessionManager.saveAccessToken(token)
+
+                    ApiResult.Success(Unit)
+                }
+            }
+
+            is ApiResult.Error -> result
         }
     }
 
     suspend fun logout() {
-        tokenStore.clear()
+        sessionManager.logout()
     }
 }

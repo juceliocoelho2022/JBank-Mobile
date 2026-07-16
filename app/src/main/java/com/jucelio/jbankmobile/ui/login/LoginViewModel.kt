@@ -6,10 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.jucelio.jbankmobile.core.network.ApiResult
 import com.jucelio.jbankmobile.data.repository.AuthRepository
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 
 class LoginViewModel(
     private val repository: AuthRepository
@@ -48,15 +47,14 @@ class LoginViewModel(
             }
 
             LoginEvent.BiometricClicked -> {
-                // A autenticação biométrica será
-                // conectada posteriormente.
+                state = state.copy(
+                    errorMessage =
+                        "Autenticação biométrica ainda não configurada."
+                )
             }
 
             LoginEvent.ForgotPasswordClicked -> {
-                state = state.copy(
-                    errorMessage =
-                        "Recuperação de senha ainda não configurada."
-                )
+                forgotPassword()
             }
 
             LoginEvent.ClearError -> {
@@ -110,7 +108,10 @@ class LoginViewModel(
     fun login(
         onSuccess: () -> Unit
     ) {
-        if (state.email.isBlank()) {
+        val email = state.email.trim()
+        val password = state.password
+
+        if (email.isBlank()) {
             state = state.copy(
                 errorMessage =
                     "Informe o seu e-mail."
@@ -118,7 +119,7 @@ class LoginViewModel(
             return
         }
 
-        if (state.password.isBlank()) {
+        if (password.isBlank()) {
             state = state.copy(
                 errorMessage =
                     "Informe a sua senha."
@@ -132,51 +133,29 @@ class LoginViewModel(
                 errorMessage = null
             )
 
-            repository.login(
-                email = state.email.trim(),
-                password = state.password
-            ).onSuccess {
-                state = state.copy(
-                    isLoading = false,
-                    errorMessage = null
+            when (
+                val result = repository.login(
+                    email = email,
+                    password = password
                 )
+            ) {
+                is ApiResult.Success -> {
+                    state = state.copy(
+                        isLoading = false,
+                        errorMessage = null
+                    )
 
-                onSuccess()
-            }.onFailure { error ->
-                state = state.copy(
-                    isLoading = false,
-                    errorMessage =
-                        error.toLoginMessage()
-                )
+                    onSuccess()
+                }
+
+                is ApiResult.Error -> {
+                    state = state.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
             }
         }
-    }
-}
-
-private fun Throwable.toLoginMessage(): String {
-    return when (this) {
-        is HttpException -> when (code()) {
-            400 ->
-                "Dados de login inválidos."
-
-            401, 403 ->
-                "E-mail ou senha inválidos."
-
-            404 ->
-                "Usuário não encontrado."
-
-            500 ->
-                "Erro interno no servidor."
-
-            else ->
-                "Erro HTTP ${code()} ao realizar o login."
-        }
-
-        is IOException ->
-            "Não foi possível conectar à API. Verifique se o backend está rodando."
-
-        else ->
-            message ?: "Não foi possível realizar o login."
     }
 }
 

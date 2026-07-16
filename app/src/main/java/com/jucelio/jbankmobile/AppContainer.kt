@@ -1,7 +1,9 @@
 package com.jucelio.jbankmobile
 
 import android.content.Context
-import com.jucelio.jbankmobile.data.local.TokenStore
+import com.jucelio.jbankmobile.core.session.SessionManager
+import com.jucelio.jbankmobile.data.local.session.DataStoreSessionStorage
+import com.jucelio.jbankmobile.data.local.session.SessionStorage
 import com.jucelio.jbankmobile.data.remote.ApiFactory
 import com.jucelio.jbankmobile.data.repository.AccountRepository
 import com.jucelio.jbankmobile.data.repository.AuthRepository
@@ -13,26 +15,47 @@ class AppContainer(
     context: Context
 ) {
 
-    val tokenStore = TokenStore(context)
+    private val applicationContext =
+        context.applicationContext
 
-    private val api = ApiFactory.create(tokenStore)
+    val sessionStorage: SessionStorage =
+        DataStoreSessionStorage(
+            context = applicationContext
+        )
 
-    val authRepository = AuthRepository(
-        api = api,
-        tokenStore = tokenStore
-    )
+    val sessionManager =
+        SessionManager(
+            sessionStorage = sessionStorage
+        )
 
-    val dashboardRepository = DashboardRepository(
-        api = api
-    )
+    private val api =
+        ApiFactory.create(
+            sessionStorage = sessionStorage
+        )
 
-    val accountRepository = AccountRepository(
-        api = api
-    )
-    val transactionRepository = TransactionRepository(
-        api = api
-    )
-    val notificationRepository = NotificationRepository(
-        api = api
-    )
+    val authRepository =
+        AuthRepository(
+            api = api,
+            sessionManager = sessionManager
+        )
+
+    val dashboardRepository =
+        DashboardRepository(
+            api = api
+        )
+
+    val accountRepository =
+        AccountRepository(
+            api = api
+        )
+
+    val transactionRepository =
+        TransactionRepository(
+            api = api
+        )
+
+    val notificationRepository =
+        NotificationRepository(
+            api = api
+        )
 }
