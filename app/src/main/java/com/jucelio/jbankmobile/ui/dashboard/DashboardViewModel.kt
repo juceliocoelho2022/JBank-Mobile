@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jucelio.jbankmobile.data.remote.dto.DashboardResponseDto
-import com.jucelio.jbankmobile.data.repository.AuthRepository
 import com.jucelio.jbankmobile.data.repository.DashboardRepository
+import com.jucelio.jbankmobile.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
