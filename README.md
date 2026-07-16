@@ -1,320 +1,358 @@
 <div align="center">
 
-# <img width="700" height="500" alt="imagen_principal" src="https://github.com/user-attachments/assets/05037798-7e11-4962-8f33-5a789f85cf58" />
- JBank Mobile
+<img src="https://github.com/user-attachments/assets/05037798-7e11-4962-8f33-5a789f85cf58" width="70%">
 
-### Android Banking Application built with Kotlin + Jetpack Compose
+# 🏦 JBank Mobile
 
-Aplicação bancária moderna desenvolvida em **Kotlin** utilizando **Jetpack Compose**, arquitetura **MVVM**, autenticação **JWT** e integração completa com a **JBank REST API**.
+### Modern Digital Banking Application built with Kotlin & Jetpack Compose
 
-![Android](https://img.shields.io/badge/Android-35-green?logo=android)
-![Kotlin](https://img.shields.io/badge/Kotlin-2.0-purple?logo=kotlin)
-![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-blue)
-![Architecture](https://img.shields.io/badge/Architecture-MVVM-orange)
+A modern Android banking application inspired by Brazil's leading digital banks, developed using **Kotlin**, **Jetpack Compose**, **Material Design 3**, **MVVM Architecture**, and secure **JWT Authentication**.
+
+---
+
+![Android](https://img.shields.io/badge/Android-35-3DDC84?logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.0-7F52FF?logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-4285F4)
+![MVVM](https://img.shields.io/badge/Architecture-MVVM-orange)
 ![Retrofit](https://img.shields.io/badge/Networking-Retrofit-red)
+![JWT](https://img.shields.io/badge/Security-JWT-success)
+![Spring Boot](https://img.shields.io/badge/API-Spring%20Boot-6DB33F?logo=springboot)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791?logo=postgresql)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
+
+<img src="https://img.shields.io/github/stars/SEU-USUARIO/JBank-Mobile?style=social">
+<img src="https://img.shields.io/github/forks/SEU-USUARIO/JBank-Mobile?style=social">
 
 </div>
 
 ---
 
-# 📱 Sobre o Projeto
+# 📖 Table of Contents
 
-O **JBank Mobile** é um aplicativo Android inspirado nas aplicações dos grandes bancos digitais brasileiros.
-
-O objetivo é demonstrar a construção de uma aplicação profissional utilizando as principais tecnologias modernas do ecossistema Android.
-
-O aplicativo consome a **JBank API**, responsável por autenticação, gerenciamento de contas, dashboard, transações e demais recursos financeiros.
-
----
-
-# 🚀 Tecnologias Utilizadas
-
-- Kotlin 2.0
-- Jetpack Compose
-- Material Design 3
-- MVVM
-- Navigation Compose
-- ViewModel
-- StateFlow
-- Coroutines
-- Retrofit
-- Gson
-- OkHttp
-- DataStore
-- JWT Authentication
-- Dependency Injection
-- Android Architecture Components
+- About
+- Features
+- Screenshots
+- Demo
+- Tech Stack
+- Architecture
+- Project Structure
+- Authentication Flow
+- API Communication
+- Installation
+- Running the Project
+- Configuration
+- Roadmap
+- Skills Demonstrated
+- Future Improvements
+- Contributing
+- Developer
+- License
 
 ---
 
-# 🏗 Arquitetura
+# 📱 About
 
-```
-Presentation
-│
-├── UI (Jetpack Compose)
-├── ViewModels
-│
-Domain
-│
-├── Use Cases
-│
-Data
-│
-├── Repository
-├── Retrofit
-├── DTOs
-└── DataStore
-```
+JBank Mobile is a modern Android Banking Application created to demonstrate enterprise-level Android development.
 
-Arquitetura baseada em **MVVM**, separando responsabilidades para facilitar testes, manutenção e escalabilidade.
+The application communicates with the **JBank REST API**, responsible for authentication, account management, dashboard information, banking transactions and future financial services.
+
+This project follows modern Android best practices, emphasizing scalability, clean architecture, maintainability and security.
+
+Inspired by applications such as:
+
+- Nubank
+- Itaú
+- Inter
+- C6 Bank
+- PicPay
 
 ---
 
-# ✨ Funcionalidades
+# ✨ Highlights
 
-## ✅ Implementadas
+✔ Kotlin 2.0
+
+✔ Jetpack Compose
+
+✔ Material Design 3
+
+✔ MVVM Architecture
+
+✔ Repository Pattern
+
+✔ REST API Integration
+
+✔ JWT Authentication
+
+✔ Secure Token Storage
+
+✔ DataStore
+
+✔ Retrofit
+
+✔ OkHttp
+
+✔ Coroutines
+
+✔ StateFlow
+
+✔ Navigation Compose
+
+✔ Clean Code
+
+✔ Android Architecture Components
+
+✔ Responsive UI
+
+✔ Production-ready structure
+
+---
+
+# 🚀 Features
+
+## Authentication
 
 - Login
 - Logout
-- Dashboard
-- Persistência do Token JWT
-- Autenticação Bearer
-- Interceptor automático
-- Navegação entre telas
-- Tratamento de erros HTTP
-- Consumo da API REST
-- Material Design 3
-- Arquitetura MVVM
+- JWT Authentication
+- Bearer Token
+- Automatic Token Injection
+- Session Persistence
 
 ---
 
-## 🚧 Próximas Funcionalidades
+## Dashboard
 
-- Cadastro de usuários
-- PIX
-- Transferências
-- TED
-- Extrato
-- Cartões
-- Investimentos
-- Perfil
-- Notificações
-- Biometria
-- QR Code PIX
-- Dark Mode
-- Dashboard Financeiro
+- Welcome Screen
+- Account Information
+- Balance
+- Quick Actions
 
 ---
 
-# 📂 Estrutura do Projeto
+## Architecture
 
-```
-app
- ├── data
- │    ├── api
- │    ├── dto
- │    ├── repository
- │    └── datastore
- │
- ├── domain
- │
- ├── ui
- │    ├── login
- │    ├── dashboard
- │    ├── navigation
- │    ├── components
- │    └── theme
- │
- ├── model
- │
- └── MainActivity
-```
+- MVVM
+- Repository Pattern
+- Reactive UI
+- StateFlow
+- ViewModel
+- Single Source of Truth
 
 ---
 
-# 🔐 Autenticação
+## Networking
 
-A autenticação utiliza **JWT (JSON Web Token)**.
-
-Fluxo:
-
-```
-Login
-      │
-      ▼
-JBank API
-      │
-      ▼
-JWT
-      │
-      ▼
-DataStore
-      │
-      ▼
-Bearer Token
-      │
-      ▼
-Demais requisições
-```
+- Retrofit
+- OkHttp
+- Gson
+- HTTP Interceptor
+- Error Handling
+- Timeout Configuration
 
 ---
 
-# 🌐 Configuração da API
+## Security
 
-No emulador Android:
-
-```
-http://10.0.2.2:8081/
-```
-
-Em dispositivo físico:
-
-```
-http://IP_DO_COMPUTADOR:8081/
-```
-
-Exemplo:
-
-```
-http://192.168.0.10:8081/
-```
-
-O computador e o celular devem estar conectados à mesma rede.
-
----
-
-# ▶ Como Executar
-
-## Pré-requisitos
-
-- Android Studio Koala ou superior
-- JDK 17
-- Gradle 8.9
-- Android SDK 35
-
----
-
-## Clonar
-
-```bash
-git clone https://github.com/SEU-USUARIO/JBank-Mobile.git
-```
-
----
-
-## Abrir
-
-Abra o projeto no Android Studio.
-
-Aguarde o Gradle Sync.
-
-Execute o aplicativo.
-
----
-
-# ⚙ Configuração
-
-A API deve estar em execução:
-
-```
-http://localhost:8081
-```
-
-O projeto já está configurado para utilizar:
-
-```
-http://10.0.2.2:8081
-```
-
----
-
-# 🔑 Credenciais
-
-Utilize um usuário previamente cadastrado na JBank API.
-
-Exemplo:
-
-```
-Email:
-usuario@email.com
-
-Senha:
-********
-```
+- JWT
+- Secure Authentication
+- Protected Routes
+- Persistent Login
+- Authorization Header
 
 ---
 
 # 📸 Screenshots
 
-> Em breve serão adicionadas capturas das telas.
+> Replace these placeholders with real screenshots.
 
-| Login | Dashboard | PIX | Cartão |
-|-------|-----------|------|---------|
-| 📷 | 📷 | 📷 | 📷 |
+| Login | Dashboard |
+|--------|-----------|
+| ![](docs/login.png) | ![](docs/dashboard.png) |
 
----
-
-# 📊 Roadmap
-
-- [x] Login
-- [x] Dashboard
-- [x] JWT
-- [x] DataStore
-- [x] Retrofit
-- [x] Navigation
-- [ ] PIX
-- [ ] Cartões
-- [ ] Extrato
-- [ ] Investimentos
-- [ ] Perfil
-- [ ] Notificações
-- [ ] Biometria
-- [ ] QR Code
+| Profile | Transactions |
+|----------|--------------|
+| ![](docs/profile.png) | ![](docs/transactions.png) |
 
 ---
 
-# 👨‍💻 Desenvolvedor
+# 🎥 Demo
 
-**Jucelio Farias Coelho**
+Coming Soon
 
-Professor • Desenvolvedor Android • Desenvolvedor Backend Java • Analista de Sistemas • Ciência de Dados
+Example:
 
-### Tecnologias
-
-- Kotlin
-- Java
-- Spring Boot
-- PostgreSQL
-- Docker
-- Android
-- Jetpack Compose
-- Firebase
-- Git
-- GitHub
+https://github.com/user-attachments/assets/demo-video.mp4
 
 ---
 
-# ⭐ Objetivo
+# 🛠 Tech Stack
 
-Este projeto faz parte do meu portfólio profissional e demonstra conhecimentos em:
-
-- Desenvolvimento Android Nativo
-- Arquitetura MVVM
-- Clean Code
-- Integração com APIs REST
-- Autenticação JWT
-- Persistência Local
-- Boas práticas de engenharia de software
+| Layer | Technology |
+|--------|------------|
+| Language | Kotlin 2.0 |
+| UI | Jetpack Compose |
+| Design | Material Design 3 |
+| Architecture | MVVM |
+| Navigation | Navigation Compose |
+| Async | Coroutines |
+| State | StateFlow |
+| Networking | Retrofit |
+| HTTP Client | OkHttp |
+| Serialization | Gson |
+| Authentication | JWT |
+| Local Storage | DataStore |
+| Backend | Spring Boot |
+| Database | PostgreSQL |
+| Build Tool | Gradle Kotlin DSL |
+| IDE | Android Studio Koala |
 
 ---
 
-<div align="center">
+# 🏗 Architecture
 
-### ⭐ Se este projeto foi útil, deixe uma Star no repositório!
+```
 
-**JBank Mobile**
-Desenvolvido com ❤️ utilizando Kotlin + Jetpack Compose.
+Presentation
+│
+├── Compose UI
+├── Screens
+├── Components
+└── ViewModels
+│
+▼
+Domain
+│
+├── Models
+├── Use Cases
+└── Business Rules
+│
+▼
+Data
+│
+├── Repository
+├── Retrofit
+├── DTOs
+├── API
+└── DataStore
+│
+▼
+JBank REST API
+│
+▼
+Spring Boot
+│
+▼
+PostgreSQL
 
-</div>
+```
+
+---
+
+# 📂 Project Structure
+
+```
+
+app
+│
+├── data
+│ ├── api
+│ ├── dto
+│ ├── repository
+│ ├── datastore
+│ └── mapper
+│
+├── domain
+│ ├── model
+│ ├── repository
+│ └── usecase
+│
+├── ui
+│ ├── login
+│ ├── dashboard
+│ ├── profile
+│ ├── navigation
+│ ├── components
+│ └── theme
+│
+├── utils
+│
+└── MainActivity.kt
+
+```
+
+---
+
+# 🔐 Authentication Flow
+
+```
+
+User Login
+│
+▼
+JBank API
+│
+▼
+JWT Token
+│
+▼
+DataStore
+│
+▼
+Authorization Bearer
+│
+▼
+Authenticated Requests
+
+```
+
+---
+
+# 🌐 API Communication
+
+```
+
+Android App
+
+↓
+
+Retrofit
+
+↓
+
+OkHttp Interceptor
+
+↓
+
+JBank REST API
+
+↓
+
+Spring Boot
+
+↓
+
+PostgreSQL
+
+```
+
+---
+
+# 📦 Main Dependencies
+
+```kotlin
+implementation("androidx.compose.ui:ui")
+implementation("androidx.compose.material3:material3")
+implementation("androidx.navigation:navigation-compose")
+implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
+
+implementation("com.squareup.retrofit2:retrofit")
+implementation("com.squareup.retrofit2:converter-gson")
+
+implementation("com.squareup.okhttp3:okhttp")
+implementation("com.squareup.okhttp3:logging-interceptor")
+
+implementation("androidx.datastore:datastore-preferences")
+
+implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
+```
