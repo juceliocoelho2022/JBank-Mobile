@@ -1,3 +1,32 @@
-# Default ignored files
-/shelf/
-/workspace.xml
+# Android Studio
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Kotlin
+.kotlin/
+
+# Configurações locais
+local.properties
+
+# Logs
+*.log
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Capturas
+captures/
+
+# Chaves de assinatura
+*.jks
+*.keystore
+
+# Variáveis e informações sensíveis
+.env
+secrets.properties
