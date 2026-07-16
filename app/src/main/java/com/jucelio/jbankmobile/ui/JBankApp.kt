@@ -34,7 +34,6 @@ import com.jucelio.jbankmobile.ui.login.LoginScreen
 import com.jucelio.jbankmobile.ui.login.LoginViewModel
 import com.jucelio.jbankmobile.ui.notification.NotificationScreen
 import com.jucelio.jbankmobile.ui.notification.NotificationViewModel
-import com.jucelio.jbankmobile.ui.notification.NotificationViewModelFactory
 import com.jucelio.jbankmobile.ui.pix.CentralPixScreen
 import com.jucelio.jbankmobile.ui.pix.PixQrResultScreen
 import com.jucelio.jbankmobile.ui.pix.PixQrScannerScreen
@@ -320,11 +319,8 @@ fun JBankApp(
          */
 
         composable(Routes.NOTIFICATIONS) {
-            val notificationViewModel: NotificationViewModel = viewModel(
-                factory = NotificationViewModelFactory(
-                    container.notificationRepository
-                )
-            )
+            val notificationViewModel: NotificationViewModel =
+                hiltViewModel()
 
             NotificationScreen(
                 state = notificationViewModel.state,

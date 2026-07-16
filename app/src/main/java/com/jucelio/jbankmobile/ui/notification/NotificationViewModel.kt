@@ -4,13 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.jucelio.jbankmobile.data.remote.dto.NotificationResponseDto
 import com.jucelio.jbankmobile.data.repository.NotificationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 data class NotificationUiState(
     val isLoading: Boolean = true,
@@ -18,11 +19,14 @@ data class NotificationUiState(
     val errorMessage: String? = null
 )
 
-class NotificationViewModel(
+@HiltViewModel
+class NotificationViewModel @Inject constructor(
     private val repository: NotificationRepository
 ) : ViewModel() {
 
-    var state by mutableStateOf(NotificationUiState())
+    var state by mutableStateOf(
+        NotificationUiState()
+    )
         private set
 
     init {
@@ -59,10 +63,13 @@ private fun Throwable.toFriendlyMessage(): String {
     return when (this) {
         is HttpException -> when (code()) {
             401, 403 ->
-                "Sua sessão expirou ou não possui autorização."
+                "Sua sessão expirou ou você não possui autorização."
 
             404 ->
                 "O endpoint de notificações não foi encontrado."
+
+            in 500..599 ->
+                "O serviço de notificações está temporariamente indisponível."
 
             else ->
                 "Erro HTTP ${code()} ao carregar notificações."
@@ -73,17 +80,5 @@ private fun Throwable.toFriendlyMessage(): String {
 
         else ->
             message ?: "Erro inesperado ao carregar notificações."
-    }
-}
-
-class NotificationViewModelFactory(
-    private val repository: NotificationRepository
-) : ViewModelProvider.Factory {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(
-        modelClass: Class<T>
-    ): T {
-        return NotificationViewModel(repository) as T
     }
 }
