@@ -42,7 +42,6 @@ import com.jucelio.jbankmobile.ui.profile.ProfileScreen
 import com.jucelio.jbankmobile.ui.splash.SplashScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModel
-import com.jucelio.jbankmobile.ui.transaction.TransactionViewModelFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -278,12 +277,9 @@ fun JBankApp(
          */
 
         composable(Routes.TRANSACTIONS) {
-            val transactionViewModel: TransactionViewModel = viewModel(
-                factory = TransactionViewModelFactory(
-                    repository = container.transactionRepository,
-                    accountId = 1L
-                )
-            )
+
+            val transactionViewModel: TransactionViewModel =
+                hiltViewModel()
 
             TransactionScreen(
                 state = transactionViewModel.state,

@@ -11,7 +11,9 @@ import com.jucelio.jbankmobile.data.repository.TransactionRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
-
+import androidx.lifecycle.SavedStateHandle
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 enum class TransactionFilter {
     ALL,
     INCOME,
@@ -40,10 +42,14 @@ data class TransactionUiState(
         }
 }
 
-class TransactionViewModel(
+@HiltViewModel
+class TransactionViewModel @Inject constructor(
     private val repository: TransactionRepository,
-    private val accountId: Long
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val accountId: Long =
+        savedStateHandle["accountId"] ?: 1L
 
     var state by mutableStateOf(TransactionUiState())
         private set
@@ -103,18 +109,4 @@ private fun Throwable.toFriendlyMessage(): String {
     }
 }
 
-class TransactionViewModelFactory(
-    private val repository: TransactionRepository,
-    private val accountId: Long
-) : ViewModelProvider.Factory {
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(
-        modelClass: Class<T>
-    ): T {
-        return TransactionViewModel(
-            repository = repository,
-            accountId = accountId
-        ) as T
-    }
-}
