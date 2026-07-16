@@ -5,9 +5,12 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val SESSION_DATA_STORE_NAME = "jbank_session"
 
@@ -16,14 +19,14 @@ private val Context.sessionDataStore by preferencesDataStore(
 )
 
 /**
- * Implementação do armazenamento da sessão autenticada
- * utilizando Jetpack DataStore Preferences.
+ * Persistência local da sessão autenticada utilizando DataStore.
  *
- * Essa classe persiste somente dados necessários para manter
- * a sessão do usuário. Senhas nunca devem ser armazenadas.
+ * A implementação é gerenciada pelo Hilt e possui uma única
+ * instância durante o ciclo de vida da aplicação.
  */
-class DataStoreSessionStorage(
-    private val context: Context
+@Singleton
+class DataStoreSessionStorage @Inject constructor(
+    @ApplicationContext private val context: Context
 ) : SessionStorage {
 
     private object Keys {
@@ -37,7 +40,6 @@ class DataStoreSessionStorage(
 
     override val sessionFlow: Flow<UserSession?> =
         context.sessionDataStore.data.map { preferences ->
-
             val accessToken = preferences[Keys.ACCESS_TOKEN]
 
             if (accessToken.isNullOrBlank()) {
@@ -64,24 +66,24 @@ class DataStoreSessionStorage(
         context.sessionDataStore.edit { preferences ->
             preferences[Keys.ACCESS_TOKEN] = session.accessToken
 
-            session.refreshToken?.let {
-                preferences[Keys.REFRESH_TOKEN] = it
+            session.refreshToken?.let { value ->
+                preferences[Keys.REFRESH_TOKEN] = value
             } ?: preferences.remove(Keys.REFRESH_TOKEN)
 
-            session.userId?.let {
-                preferences[Keys.USER_ID] = it
+            session.userId?.let { value ->
+                preferences[Keys.USER_ID] = value
             } ?: preferences.remove(Keys.USER_ID)
 
-            session.accountId?.let {
-                preferences[Keys.ACCOUNT_ID] = it
+            session.accountId?.let { value ->
+                preferences[Keys.ACCOUNT_ID] = value
             } ?: preferences.remove(Keys.ACCOUNT_ID)
 
-            session.userName?.let {
-                preferences[Keys.USER_NAME] = it
+            session.userName?.let { value ->
+                preferences[Keys.USER_NAME] = value
             } ?: preferences.remove(Keys.USER_NAME)
 
-            session.expiresAt?.let {
-                preferences[Keys.EXPIRES_AT] = it
+            session.expiresAt?.let { value ->
+                preferences[Keys.EXPIRES_AT] = value
             } ?: preferences.remove(Keys.EXPIRES_AT)
         }
     }
