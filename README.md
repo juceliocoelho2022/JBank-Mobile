@@ -1,6 +1,7 @@
 <div align="center">
 
-# 🏦 JBank Mobile
+# <img width="1254" height="1254" alt="imagen_principal" src="https://github.com/user-attachments/assets/05037798-7e11-4962-8f33-5a789f85cf58" />
+ JBank Mobile
 
 ### Android Banking Application built with Kotlin + Jetpack Compose
 
