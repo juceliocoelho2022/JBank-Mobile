@@ -3,7 +3,7 @@ package com.jucelio.jbankmobile.data.repository
 import com.jucelio.jbankmobile.core.network.ApiResult
 import com.jucelio.jbankmobile.core.network.safeApiCall
 import com.jucelio.jbankmobile.data.mapper.toDomain
-import com.jucelio.jbankmobile.data.remote.JBankApi
+import com.jucelio.jbankmobile.data.remote.datasource.DashboardRemoteDataSource
 import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Dashboard
 import com.jucelio.jbankmobile.domain.repository.DashboardRepository
@@ -12,13 +12,13 @@ import javax.inject.Singleton
 
 @Singleton
 class DashboardRepositoryImpl @Inject constructor(
-    private val api: JBankApi
+    private val remoteDataSource: DashboardRemoteDataSource
 ) : DashboardRepository {
 
     override suspend fun getDashboard(): AppResult<Dashboard> {
         return when (
             val result = safeApiCall {
-                api.getDashboard()
+                remoteDataSource.getDashboard()
             }
         ) {
             is ApiResult.Success -> {
