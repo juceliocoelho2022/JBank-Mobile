@@ -651,11 +651,11 @@ Android Developer • Backend Java Developer • Systems Analyst • Mathematics
 
 LinkedIn
 
-https://www.linkedin.com/in/SEU-LINK
+https://www.linkedin.com/in/jucelio-desenvolvedor-sistema
 
 GitHub
 
-https://github.com/SEU-USUARIO
+https://github.com/juceliocoelho2022
 
 Portfolio
 
@@ -663,7 +663,7 @@ https://SEU-SITE.com
 
 Email
 
-seuemail@email.com
+juceliocoelho2010@email.com
 
 ---
 
