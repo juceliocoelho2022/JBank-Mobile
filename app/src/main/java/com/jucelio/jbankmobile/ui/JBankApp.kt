@@ -25,7 +25,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.jucelio.jbankmobile.AppContainer
 import com.jucelio.jbankmobile.ui.account.AccountScreen
 import com.jucelio.jbankmobile.ui.account.AccountViewModel
 import com.jucelio.jbankmobile.ui.dashboard.DashboardViewModel
@@ -42,8 +41,6 @@ import com.jucelio.jbankmobile.ui.profile.ProfileScreen
 import com.jucelio.jbankmobile.ui.splash.SplashScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModel
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 private object Routes {
     const val SPLASH = "splash"
@@ -64,9 +61,7 @@ private object Routes {
 }
 
 @Composable
-fun JBankApp(
-    container: AppContainer
-) {
+fun JBankApp() {
     val navController = rememberNavController()
 
     NavHost(

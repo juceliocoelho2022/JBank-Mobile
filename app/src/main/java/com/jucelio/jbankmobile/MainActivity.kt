@@ -22,7 +22,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val container = AppContainer(applicationContext)
 
         setContent {
             JBankTheme {
@@ -51,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
-                    JBankApp(container)
+                    JBankApp()
                 }
             }
         }
