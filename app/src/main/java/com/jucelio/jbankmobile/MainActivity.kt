@@ -15,7 +15,8 @@ import com.jucelio.jbankmobile.ui.JBankApp
 import com.jucelio.jbankmobile.ui.splash.SplashScreen
 import com.jucelio.jbankmobile.ui.theme.JBankTheme
 import kotlinx.coroutines.delay
-
+import dagger.hilt.android.AndroidEntryPoint
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
