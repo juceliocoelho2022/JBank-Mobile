@@ -13,7 +13,8 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
+import com.jucelio.jbankmobile.data.repository.NotificationRepositoryImpl
+import com.jucelio.jbankmobile.domain.repository.NotificationRepository
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
@@ -41,4 +42,10 @@ abstract class RepositoryModule {
     abstract fun bindTransactionRepository(
         implementation: TransactionRepositoryImpl
     ): TransactionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRepository(
+        implementation: NotificationRepositoryImpl
+    ): NotificationRepository
 }

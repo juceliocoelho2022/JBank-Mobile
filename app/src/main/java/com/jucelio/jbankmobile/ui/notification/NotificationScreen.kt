@@ -51,8 +51,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jucelio.jbankmobile.data.remote.dto.NotificationResponseDto
-
+import com.jucelio.jbankmobile.domain.model.Notification
 private val Navy = Color(0xFF031B3A)
 private val Green = Color(0xFF00C96B)
 private val Background = Color(0xFFF4F6FA)
@@ -156,7 +155,7 @@ fun NotificationScreen(
 @Composable
 private fun NotificationContent(
     modifier: Modifier,
-    notifications: List<NotificationResponseDto>
+    notifications: List<Notification>
 ) {
     LazyColumn(
         modifier = modifier,
@@ -202,7 +201,7 @@ private fun NotificationContent(
 
 @Composable
 private fun NotificationCard(
-    notification: NotificationResponseDto
+    notification: Notification
 ) {
     val color = notificationColor(notification.type)
 
@@ -285,13 +284,15 @@ private fun NotificationCard(
                     lineHeight = 19.sp
                 )
 
-                notification.createdAt?.let { date ->
+                if (notification.createdAt.isNotBlank()) {
                     Spacer(
                         modifier = Modifier.height(7.dp)
                     )
 
                     Text(
-                        text = formatNotificationDate(date),
+                        text = formatNotificationDate(
+                            notification.createdAt
+                        ),
                         color = MutedText,
                         fontSize = 12.sp
                     )
