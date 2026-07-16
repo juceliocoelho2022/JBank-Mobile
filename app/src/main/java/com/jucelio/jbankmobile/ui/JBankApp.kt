@@ -30,7 +30,6 @@ import com.jucelio.jbankmobile.ui.account.AccountScreen
 import com.jucelio.jbankmobile.ui.account.AccountViewModel
 import com.jucelio.jbankmobile.ui.account.AccountViewModelFactory
 import com.jucelio.jbankmobile.ui.dashboard.DashboardViewModel
-import com.jucelio.jbankmobile.ui.dashboard.DashboardViewModelFactory
 import com.jucelio.jbankmobile.ui.home.HomeScreen
 import com.jucelio.jbankmobile.ui.login.LoginScreen
 import com.jucelio.jbankmobile.ui.login.LoginViewModel
@@ -137,27 +136,23 @@ fun JBankApp(
          * ============================================================
          */
 
-        composable(Routes.HOME) {
-            val homeViewModel: DashboardViewModel = viewModel(
-                factory = DashboardViewModelFactory(
-                    container.dashboardRepository
-                )
-            )
 
-            HomeScreen(
-                state = homeViewModel.state,
+            composable(Routes.HOME) {
+                val homeViewModel: DashboardViewModel =
+                    hiltViewModel()
 
-                onRefresh = homeViewModel::load,
+                HomeScreen(
+                    state = homeViewModel.state,
 
-                onLogout = {
-                    homeViewModel.logout(
-                        container.authRepository
-                    ) {
-                        navigateToLogin(
-                            navController = navController
-                        )
-                    }
-                },
+                    onRefresh = homeViewModel::load,
+
+                    onLogout = {
+                        homeViewModel.logout {
+                            navigateToLogin(
+                                navController = navController
+                            )
+                        }
+                    },
 
                 /*
                  * Ação rápida "Contas".
@@ -573,11 +568,8 @@ fun JBankApp(
          */
 
         composable(Routes.PROFILE) {
-            val profileViewModel: DashboardViewModel = viewModel(
-                factory = DashboardViewModelFactory(
-                    container.dashboardRepository
-                )
-            )
+            val profileViewModel: DashboardViewModel =
+                hiltViewModel()
 
             ProfileScreen(
                 userName = "Jucelio Farias Coelho",
@@ -620,15 +612,12 @@ fun JBankApp(
                 },
 
                 onLogout = {
-                    profileViewModel.logout(
-                        container.authRepository
-                    ) {
+                    profileViewModel.logout {
                         navigateToLogin(
                             navController = navController
                         )
                     }
                 },
-
                 onMyProfileClick = {
                     println("Abrir dados pessoais")
                 },

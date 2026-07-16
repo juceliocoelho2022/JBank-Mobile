@@ -4,14 +4,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.jucelio.jbankmobile.data.remote.dto.DashboardResponseDto
 import com.jucelio.jbankmobile.data.repository.AuthRepository
 import com.jucelio.jbankmobile.data.repository.DashboardRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 data class DashboardUiState(
     val isLoading: Boolean = true,
@@ -19,11 +20,15 @@ data class DashboardUiState(
     val errorMessage: String? = null
 )
 
-class DashboardViewModel(
-    private val repository: DashboardRepository
+@HiltViewModel
+class DashboardViewModel @Inject constructor(
+    private val dashboardRepository: DashboardRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    var state by mutableStateOf(DashboardUiState())
+    var state by mutableStateOf(
+        DashboardUiState()
+    )
         private set
 
     init {
@@ -31,42 +36,84 @@ class DashboardViewModel(
     }
 
     fun load() {
-        viewModelScope.launch {
-            state = state.copy(isLoading = true, errorMessage = null)
+        if (state.isLoading && state.data != null) {
+            return
+        }
 
-            repository.loadDashboard()
-                .onSuccess {
+        viewModelScope.launch {
+            state = state.copy(
+                isLoading = true,
+                errorMessage = null
+            )
+
+            dashboardRepository
+                .loadDashboard()
+                .onSuccess { dashboard ->
                     state = DashboardUiState(
                         isLoading = false,
-                        data = it
+                        data = dashboard,
+                        errorMessage = null
                     )
                 }
                 .onFailure { error ->
                     state = DashboardUiState(
                         isLoading = false,
-                        errorMessage = when (error) {
-                            is HttpException -> "Erro HTTP ${error.code()} ao carregar o dashboard."
-                            is IOException -> "API indisponível. Confirme o backend na porta 8081."
-                            else -> error.message ?: "Erro inesperado."
-                        }
+                        data = state.data,
+                        errorMessage = error.toDashboardMessage()
                     )
                 }
         }
     }
 
-    fun logout(repository: AuthRepository, onDone: () -> Unit) {
+    fun logout(
+        onDone: () -> Unit
+    ) {
         viewModelScope.launch {
-            repository.logout()
-            onDone()
+            runCatching {
+                authRepository.logout()
+            }.onSuccess {
+                onDone()
+            }.onFailure { error ->
+                state = state.copy(
+                    errorMessage = error.message
+                        ?: "Não foi possível encerrar a sessão."
+                )
+            }
         }
+    }
+
+    fun clearError() {
+        state = state.copy(
+            errorMessage = null
+        )
     }
 }
 
-class DashboardViewModelFactory(
-    private val repository: DashboardRepository
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return DashboardViewModel(repository) as T
+private fun Throwable.toDashboardMessage(): String {
+    return when (this) {
+        is HttpException -> {
+            when (code()) {
+                401 ->
+                    "Sua sessão expirou. Entre novamente."
+
+                403 ->
+                    "Você não possui permissão para acessar o dashboard."
+
+                404 ->
+                    "Os dados do dashboard não foram encontrados."
+
+                in 500..599 ->
+                    "O serviço está temporariamente indisponível."
+
+                else ->
+                    "Erro HTTP ${code()} ao carregar o dashboard."
+            }
+        }
+
+        is IOException ->
+            "Não foi possível conectar à API. Confirme se o backend está disponível."
+
+        else ->
+            message ?: "Não foi possível carregar o dashboard."
     }
 }
