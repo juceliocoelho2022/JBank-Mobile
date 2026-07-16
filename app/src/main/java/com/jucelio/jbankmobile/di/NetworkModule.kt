@@ -2,6 +2,7 @@ package com.jucelio.jbankmobile.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.jucelio.jbankmobile.core.network.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,6 +50,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor,
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
@@ -64,6 +66,7 @@ object NetworkModule {
                 WRITE_TIMEOUT_SECONDS,
                 TimeUnit.SECONDS
             )
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .retryOnConnectionFailure(true)
             .build()
