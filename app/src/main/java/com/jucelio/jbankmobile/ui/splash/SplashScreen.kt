@@ -97,7 +97,7 @@ fun SplashScreen(
                 color = Color.White.copy(
                     alpha = 0.72f
                 ),
-                fontSize = 22.sp,
+                fontSize = 26.sp,
                 textAlign = TextAlign.Center
             )
 
