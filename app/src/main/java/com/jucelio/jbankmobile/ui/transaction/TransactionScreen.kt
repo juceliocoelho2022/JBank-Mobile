@@ -50,11 +50,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jucelio.jbankmobile.data.remote.dto.TransactionResponseDto
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
-
+import com.jucelio.jbankmobile.domain.model.Transaction
 private val Navy = Color(0xFF031B3A)
 private val Green = Color(0xFF00C96B)
 private val Background = Color(0xFFF4F6FA)
@@ -247,7 +246,7 @@ private fun FilterButton(
 @Composable
 private fun TransactionContent(
     modifier: Modifier,
-    transactions: List<TransactionResponseDto>
+    transactions: List<Transaction>
 ) {
     LazyColumn(
         modifier = modifier,
@@ -267,7 +266,7 @@ private fun TransactionContent(
             items(
                 items = transactions,
                 key = {
-                    it.id ?: it.hashCode().toLong()
+                    it.id
                 }
             ) { transaction ->
                 TransactionCard(transaction)
@@ -278,10 +277,10 @@ private fun TransactionContent(
 
 @Composable
 private fun TransactionCard(
-    transaction: TransactionResponseDto
+    transaction: Transaction
 ) {
-    val income = transaction.type
-        ?.uppercase() == "DEPOSIT"
+    val income =
+        transaction.type.uppercase() == "DEPOSIT"
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -338,15 +337,15 @@ private fun TransactionCard(
                 )
 
                 Text(
-                    text = transaction.description
-                        ?: "Operação bancária",
+                    text = transaction.description.ifBlank {
+                        "Operação bancária"
+                    },
                     color = Muted,
                     fontSize = 12.sp
                 )
 
                 Text(
-                    text = transaction.createdAt
-                        ?: "",
+                    text = transaction.createdAt,
                     color = Muted,
                     fontSize = 11.sp
                 )
@@ -528,15 +527,15 @@ private fun navigationColors() =
     )
 
 private fun transactionTitle(
-    transaction: TransactionResponseDto
+    transaction: Transaction
 ): String {
-    return when (transaction.type?.uppercase()) {
+    return when (transaction.type.uppercase()) {
         "PIX" -> "PIX"
         "DEPOSIT" -> "Depósito"
         "WITHDRAW" -> "Saque"
         "TRANSFER" -> "Transferência"
         "TED" -> "TED"
-        else -> transaction.type ?: "Transação"
+        else -> transaction.type
     }
 }
 

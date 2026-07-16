@@ -4,16 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.jucelio.jbankmobile.data.remote.dto.TransactionResponseDto
-import com.jucelio.jbankmobile.data.repository.TransactionRepository
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.model.Transaction
+import com.jucelio.jbankmobile.domain.usecase.transaction.GetStatementUseCase
 enum class TransactionFilter {
     ALL,
     INCOME,
@@ -22,29 +20,30 @@ enum class TransactionFilter {
 
 data class TransactionUiState(
     val isLoading: Boolean = true,
-    val transactions: List<TransactionResponseDto> = emptyList(),
+    val transactions: List<Transaction> = emptyList(),
     val filter: TransactionFilter = TransactionFilter.ALL,
     val errorMessage: String? = null
 ) {
-    val filteredTransactions: List<TransactionResponseDto>
+    val filteredTransactions: List<Transaction>
         get() = when (filter) {
             TransactionFilter.ALL -> transactions
 
             TransactionFilter.INCOME ->
                 transactions.filter {
-                    it.type?.uppercase() == "DEPOSIT"
+                    it.type.uppercase() == "DEPOSIT" ||
+                            it.type.uppercase().contains("RECEIVED")
                 }
 
             TransactionFilter.EXPENSE ->
                 transactions.filter {
-                    it.type?.uppercase() != "DEPOSIT"
+                    it.type.uppercase() != "DEPOSIT" &&
+                            !it.type.uppercase().contains("RECEIVED")
                 }
         }
 }
-
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
-    private val repository: TransactionRepository,
+    private val getStatementUseCase: GetStatementUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -65,21 +64,25 @@ class TransactionViewModel @Inject constructor(
                 errorMessage = null
             )
 
-            repository.getStatement(accountId)
-                .onSuccess { transactions ->
+            when (
+                val result = getStatementUseCase(accountId)
+            ) {
+                is AppResult.Success -> {
                     state = state.copy(
                         isLoading = false,
-                        transactions = transactions,
+                        transactions = result.data,
                         errorMessage = null
                     )
                 }
-                .onFailure { error ->
+
+                is AppResult.Failure -> {
                     state = state.copy(
                         isLoading = false,
                         transactions = emptyList(),
-                        errorMessage = error.toFriendlyMessage()
+                        errorMessage = result.message
                     )
                 }
+            }
         }
     }
 
@@ -87,26 +90,4 @@ class TransactionViewModel @Inject constructor(
         state = state.copy(filter = filter)
     }
 }
-
-private fun Throwable.toFriendlyMessage(): String {
-    return when (this) {
-        is HttpException -> when (code()) {
-            401, 403 ->
-                "Sua sessão expirou ou não possui autorização."
-
-            404 ->
-                "O extrato da conta não foi encontrado."
-
-            else ->
-                "Erro HTTP ${code()} ao carregar as transações."
-        }
-
-        is IOException ->
-            "Não foi possível conectar à API."
-
-        else ->
-            message ?: "Erro inesperado ao carregar as transações."
-    }
-}
-
 

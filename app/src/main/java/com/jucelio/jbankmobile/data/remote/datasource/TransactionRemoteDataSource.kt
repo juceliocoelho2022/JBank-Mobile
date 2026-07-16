@@ -1,19 +1,18 @@
-package com.jucelio.jbankmobile.data.repository
+package com.jucelio.jbankmobile.data.remote.datasource
 
 import com.jucelio.jbankmobile.data.remote.JBankApi
 import com.jucelio.jbankmobile.data.remote.dto.TransactionResponseDto
 import javax.inject.Inject
 import javax.inject.Singleton
+
 @Singleton
-class TransactionRepository @Inject constructor(
+class TransactionRemoteDataSource @Inject constructor(
     private val api: JBankApi
 ) {
 
     suspend fun getStatement(
         accountId: Long
-    ): Result<List<TransactionResponseDto>> {
-        return runCatching {
-            api.getStatement(accountId)
-        }
+    ): List<TransactionResponseDto> {
+        return api.getStatement(accountId)
     }
 }

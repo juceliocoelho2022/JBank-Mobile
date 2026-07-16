@@ -44,11 +44,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jucelio.jbankmobile.data.remote.dto.AccountResponseDto
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
-
+import com.jucelio.jbankmobile.domain.model.Account
 private val Navy = Color(0xFF031B3A)
 private val NavyLight = Color(0xFF082A55)
 private val Green = Color(0xFF00C96B)
@@ -140,7 +139,7 @@ fun AccountScreen(
 @Composable
 private fun AccountContent(
     modifier: Modifier,
-    accounts: List<AccountResponseDto>,
+    accounts: List<Account>,
     onAccountClick: (Long) -> Unit
 ) {
     LazyColumn(
@@ -216,7 +215,7 @@ private fun AccountContent(
 
 @Composable
 private fun AccountCard(
-    account: AccountResponseDto,
+    account: Account,
     isPrincipal: Boolean,
     onClick: () -> Unit
 ) {

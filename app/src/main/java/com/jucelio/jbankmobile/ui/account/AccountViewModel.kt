@@ -6,24 +6,22 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.jucelio.jbankmobile.data.remote.dto.AccountResponseDto
-import com.jucelio.jbankmobile.data.repository.AccountRepository
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.jucelio.jbankmobile.domain.model.Account
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.usecase.account.GetAccountsUseCase
 data class AccountUiState(
     val isLoading: Boolean = true,
-    val accounts: List<AccountResponseDto> = emptyList(),
+    val accounts: List<Account> = emptyList(),
     val errorMessage: String? = null
 )
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val repository: AccountRepository
-) : ViewModel(){
-
+    private val getAccountsUseCase: GetAccountsUseCase
+) : ViewModel() {
     var state by mutableStateOf(AccountUiState())
         private set
 
@@ -38,43 +36,25 @@ class AccountViewModel @Inject constructor(
                 errorMessage = null
             )
 
-            repository.getAccounts()
-                .onSuccess { accounts ->
+            when (
+                val result = getAccountsUseCase()
+            ) {
+                is AppResult.Success -> {
                     state = AccountUiState(
                         isLoading = false,
-                        accounts = accounts,
+                        accounts = result.data,
                         errorMessage = null
                     )
                 }
-                .onFailure { error ->
+
+                is AppResult.Failure -> {
                     state = AccountUiState(
                         isLoading = false,
                         accounts = emptyList(),
-                        errorMessage = error.toFriendlyMessage()
+                        errorMessage = result.message
                     )
                 }
+            }
         }
     }
 }
-
-private fun Throwable.toFriendlyMessage(): String {
-    return when (this) {
-        is HttpException -> when (code()) {
-            401, 403 ->
-                "Sua sessão expirou ou não possui autorização."
-
-            404 ->
-                "O endpoint de contas não foi encontrado."
-
-            else ->
-                "Erro HTTP ${code()} ao carregar as contas."
-        }
-
-        is IOException ->
-            "Não foi possível conectar à API. Confirme o backend na porta 8081."
-
-        else ->
-            message ?: "Erro inesperado ao carregar as contas."
-    }
-}
-

@@ -1,17 +1,16 @@
-package com.jucelio.jbankmobile.data.repository
+package com.jucelio.jbankmobile.data.remote.datasource
 
 import com.jucelio.jbankmobile.data.remote.JBankApi
 import com.jucelio.jbankmobile.data.remote.dto.AccountResponseDto
 import javax.inject.Inject
 import javax.inject.Singleton
+
 @Singleton
-class AccountRepository @Inject constructor(
+class AccountRemoteDataSource @Inject constructor(
     private val api: JBankApi
 ) {
 
-    suspend fun getAccounts(): Result<List<AccountResponseDto>> {
-        return runCatching {
-            api.getAccounts()
-        }
+    suspend fun getAccounts(): List<AccountResponseDto> {
+        return api.getAccounts()
     }
 }
