@@ -5,25 +5,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jucelio.jbankmobile.data.remote.dto.DashboardResponseDto
-import com.jucelio.jbankmobile.data.repository.DashboardRepository
-import com.jucelio.jbankmobile.domain.repository.AuthRepository
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.model.Dashboard
+import com.jucelio.jbankmobile.domain.usecase.auth.LogoutUseCase
+import com.jucelio.jbankmobile.domain.usecase.dashboard.GetDashboardUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 data class DashboardUiState(
     val isLoading: Boolean = true,
-    val data: DashboardResponseDto? = null,
+    val data: Dashboard? = null,
     val errorMessage: String? = null
 )
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val dashboardRepository: DashboardRepository,
-    private val authRepository: AuthRepository
+    private val getDashboardUseCase: GetDashboardUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(
@@ -46,22 +45,25 @@ class DashboardViewModel @Inject constructor(
                 errorMessage = null
             )
 
-            dashboardRepository
-                .loadDashboard()
-                .onSuccess { dashboard ->
+            when (
+                val result = getDashboardUseCase()
+            ) {
+                is AppResult.Success -> {
                     state = DashboardUiState(
                         isLoading = false,
-                        data = dashboard,
+                        data = result.data,
                         errorMessage = null
                     )
                 }
-                .onFailure { error ->
+
+                is AppResult.Failure -> {
                     state = DashboardUiState(
                         isLoading = false,
                         data = state.data,
-                        errorMessage = error.toDashboardMessage()
+                        errorMessage = result.message
                     )
                 }
+            }
         }
     }
 
@@ -69,15 +71,18 @@ class DashboardViewModel @Inject constructor(
         onDone: () -> Unit
     ) {
         viewModelScope.launch {
-            runCatching {
-                authRepository.logout()
-            }.onSuccess {
-                onDone()
-            }.onFailure { error ->
-                state = state.copy(
-                    errorMessage = error.message
-                        ?: "Não foi possível encerrar a sessão."
-                )
+            when (
+                val result = logoutUseCase()
+            ) {
+                is AppResult.Success -> {
+                    onDone()
+                }
+
+                is AppResult.Failure -> {
+                    state = state.copy(
+                        errorMessage = result.message
+                    )
+                }
             }
         }
     }
@@ -86,34 +91,5 @@ class DashboardViewModel @Inject constructor(
         state = state.copy(
             errorMessage = null
         )
-    }
-}
-
-private fun Throwable.toDashboardMessage(): String {
-    return when (this) {
-        is HttpException -> {
-            when (code()) {
-                401 ->
-                    "Sua sessão expirou. Entre novamente."
-
-                403 ->
-                    "Você não possui permissão para acessar o dashboard."
-
-                404 ->
-                    "Os dados do dashboard não foram encontrados."
-
-                in 500..599 ->
-                    "O serviço está temporariamente indisponível."
-
-                else ->
-                    "Erro HTTP ${code()} ao carregar o dashboard."
-            }
-        }
-
-        is IOException ->
-            "Não foi possível conectar à API. Confirme se o backend está disponível."
-
-        else ->
-            message ?: "Não foi possível carregar o dashboard."
     }
 }

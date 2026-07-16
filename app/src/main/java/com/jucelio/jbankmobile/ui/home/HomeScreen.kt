@@ -36,7 +36,6 @@ import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.ReceiptLong
-import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.Visibility
@@ -70,7 +69,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jucelio.jbankmobile.data.remote.dto.TransactionResponseDto
+import com.jucelio.jbankmobile.domain.model.DashboardTransaction
 import com.jucelio.jbankmobile.ui.dashboard.DashboardUiState
 import java.math.BigDecimal
 import java.text.NumberFormat
@@ -627,7 +626,7 @@ private fun LoanBanner() {
 
 @Composable
 private fun TransactionsCard(
-    transactions: List<TransactionResponseDto>,
+    transactions: List<DashboardTransaction>,
     onSeeAllClick: () -> Unit
 ) {
     Card(
@@ -703,7 +702,7 @@ private fun TransactionsCard(
 
 @Composable
 private fun TransactionRow(
-    transaction: TransactionResponseDto
+    transaction: DashboardTransaction
 ) {
     val transactionType = transaction.type
         ?.uppercase()
@@ -1135,7 +1134,7 @@ private fun BigDecimal?.toCurrency(): String {
 }
 
 private fun transactionTitle(
-    transaction: TransactionResponseDto
+    transaction: DashboardTransaction
 ): String {
     return when (
         transaction.type
@@ -1155,7 +1154,7 @@ private fun transactionTitle(
 }
 
 private fun transactionAmount(
-    transaction: TransactionResponseDto
+    transaction: DashboardTransaction
 ): String {
     val value = transaction.amount.toCurrency()
 
