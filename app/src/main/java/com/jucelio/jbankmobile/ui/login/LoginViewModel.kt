@@ -4,13 +4,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.jucelio.jbankmobile.core.network.ApiResult
 import com.jucelio.jbankmobile.data.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
+/**
+ * Gerencia o estado e as ações da tela de autenticação.
+ *
+ * O repository é fornecido automaticamente pelo Hilt.
+ */
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
@@ -34,7 +41,7 @@ class LoginViewModel(
 
             is LoginEvent.RememberAccessChanged -> {
                 onRememberAccessChange(
-                    event.checked
+                    checked = event.checked
                 )
             }
 
@@ -43,7 +50,9 @@ class LoginViewModel(
             }
 
             LoginEvent.LoginClicked -> {
-                login(onLoginSuccess)
+                login(
+                    onSuccess = onLoginSuccess
+                )
             }
 
             LoginEvent.BiometricClicked -> {
@@ -58,9 +67,7 @@ class LoginViewModel(
             }
 
             LoginEvent.ClearError -> {
-                state = state.copy(
-                    errorMessage = null
-                )
+                clearError()
             }
         }
     }
@@ -105,6 +112,12 @@ class LoginViewModel(
         )
     }
 
+    fun clearError() {
+        state = state.copy(
+            errorMessage = null
+        )
+    }
+
     fun login(
         onSuccess: () -> Unit
     ) {
@@ -124,6 +137,10 @@ class LoginViewModel(
                 errorMessage =
                     "Informe a sua senha."
             )
+            return
+        }
+
+        if (state.isLoading) {
             return
         }
 
@@ -156,29 +173,5 @@ class LoginViewModel(
                 }
             }
         }
-    }
-}
-
-class LoginViewModelFactory(
-    private val repository: AuthRepository
-) : ViewModelProvider.Factory {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(
-        modelClass: Class<T>
-    ): T {
-        if (
-            modelClass.isAssignableFrom(
-                LoginViewModel::class.java
-            )
-        ) {
-            return LoginViewModel(
-                repository = repository
-            ) as T
-        }
-
-        throw IllegalArgumentException(
-            "ViewModel desconhecido: ${modelClass.name}"
-        )
     }
 }

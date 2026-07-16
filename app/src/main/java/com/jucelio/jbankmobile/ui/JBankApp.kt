@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,7 +34,6 @@ import com.jucelio.jbankmobile.ui.dashboard.DashboardViewModelFactory
 import com.jucelio.jbankmobile.ui.home.HomeScreen
 import com.jucelio.jbankmobile.ui.login.LoginScreen
 import com.jucelio.jbankmobile.ui.login.LoginViewModel
-import com.jucelio.jbankmobile.ui.login.LoginViewModelFactory
 import com.jucelio.jbankmobile.ui.notification.NotificationScreen
 import com.jucelio.jbankmobile.ui.notification.NotificationViewModel
 import com.jucelio.jbankmobile.ui.notification.NotificationViewModelFactory
@@ -48,6 +46,8 @@ import com.jucelio.jbankmobile.ui.splash.SplashScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModel
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 private object Routes {
     const val SPLASH = "splash"
@@ -105,18 +105,17 @@ fun JBankApp(
          */
 
         composable(Routes.LOGIN) {
-            val loginViewModel: LoginViewModel = viewModel(
-                factory = LoginViewModelFactory(
-                    repository = container.authRepository
-                )
-            )
+            val loginViewModel: LoginViewModel =
+                hiltViewModel()
 
             LoginScreen(
                 state = loginViewModel.state,
 
-                onEmailChange = loginViewModel::onEmailChange,
+                onEmailChange =
+                    loginViewModel::onEmailChange,
 
-                onPasswordChange = loginViewModel::onPasswordChange,
+                onPasswordChange =
+                    loginViewModel::onPasswordChange,
 
                 onLogin = {
                     loginViewModel.login {

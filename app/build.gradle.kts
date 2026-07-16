@@ -143,7 +143,9 @@ dependencies {
     implementation(
         "com.google.mlkit:barcode-scanning:17.3.0"
     )
-
+    implementation(
+        "androidx.hilt:hilt-navigation-compose:1.2.0"
+    )
     debugImplementation(
         "androidx.compose.ui:ui-tooling"
     )
