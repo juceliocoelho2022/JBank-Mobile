@@ -1,5 +1,6 @@
 package com.jucelio.jbankmobile.di
 
+import com.jucelio.jbankmobile.data.remote.JBankApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jucelio.jbankmobile.core.network.AuthInterceptor
@@ -89,5 +90,14 @@ object NetworkModule {
                 GsonConverterFactory.create(gson)
             )
             .build()
+    }
+    @Provides
+    @Singleton
+    fun provideJBankApi(
+        retrofit: Retrofit
+    ): JBankApi {
+        return retrofit.create(
+            JBankApi::class.java
+        )
     }
 }
