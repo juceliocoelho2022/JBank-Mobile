@@ -356,3 +356,343 @@ implementation("androidx.datastore:datastore-preferences")
 
 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
 ```
+---
+
+# ⚙ Requirements
+
+Before running the application, make sure your environment meets the following requirements:
+
+| Requirement | Version |
+|-------------|---------|
+| Android Studio | Koala or newer |
+| JDK | 17+ |
+| Android SDK | 35 |
+| Gradle | 8.9+ |
+| Kotlin | 2.0 |
+| Git | Latest |
+
+---
+
+# 🚀 Getting Started
+
+## Clone the Repository
+
+```bash
+git clone https://github.com/SEU-USUARIO/JBank-Mobile.git
+```
+
+Open the project in **Android Studio** and wait for the Gradle synchronization to finish.
+
+---
+
+# ▶ Running the Application
+
+1. Start the **JBank API**.
+2. Open Android Studio.
+3. Sync Gradle.
+4. Connect an Android device or emulator.
+5. Click **Run**.
+
+---
+
+# 🌐 API Configuration
+
+### Android Emulator
+
+```
+http://10.0.2.2:8081
+```
+
+### Physical Device
+
+```
+http://YOUR_COMPUTER_IP:8081
+```
+
+Example
+
+```
+http://192.168.0.100:8081
+```
+
+Both devices must be connected to the same network.
+
+---
+
+# 🔑 Authentication
+
+Use a user previously created in the JBank API.
+
+Example
+
+Email
+
+```
+user@email.com
+```
+
+Password
+
+```
+********
+```
+
+---
+
+# 📡 API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| POST /api/auth/login | Authenticate user |
+| GET /api/dashboard | Dashboard information |
+| GET /api/accounts | User accounts |
+| POST /api/pix | PIX transfer |
+| POST /api/transfer | Bank transfer |
+| GET /api/transactions | Statement |
+| GET /api/profile | User profile |
+
+---
+
+# 📈 Roadmap
+
+## Version 1.0
+
+- [x] Login
+- [x] Logout
+- [x] JWT Authentication
+- [x] Retrofit Integration
+- [x] Dashboard
+- [x] DataStore
+- [x] Material Design 3
+- [x] Navigation Compose
+
+---
+
+## Version 1.1
+
+- [ ] PIX
+- [ ] Transfer
+- [ ] TED
+- [ ] Transaction History
+- [ ] User Profile
+
+---
+
+## Version 1.2
+
+- [ ] Credit Card
+- [ ] Debit Card
+- [ ] QR Code PIX
+- [ ] Notifications
+- [ ] Investments
+
+---
+
+## Version 2.0
+
+- [ ] Face ID
+- [ ] Fingerprint Authentication
+- [ ] Open Finance
+- [ ] Push Notifications
+- [ ] Spending Analytics
+- [ ] Dark Theme
+- [ ] Multi-language Support
+
+---
+
+# 📊 Project Metrics
+
+| Metric | Status |
+|---------|--------|
+| Kotlin | ✅ |
+| MVVM | ✅ |
+| REST API | ✅ |
+| JWT | ✅ |
+| Retrofit | ✅ |
+| Compose | ✅ |
+| Material 3 | ✅ |
+| StateFlow | ✅ |
+| Coroutines | ✅ |
+| DataStore | ✅ |
+
+---
+
+# 💼 Skills Demonstrated
+
+This project demonstrates practical experience with:
+
+- Android Development
+- Kotlin
+- Jetpack Compose
+- MVVM Architecture
+- Repository Pattern
+- REST APIs
+- JSON Serialization
+- Retrofit
+- OkHttp
+- JWT Authentication
+- Coroutines
+- StateFlow
+- DataStore
+- Material Design 3
+- Clean Code
+- SOLID Principles
+- Git
+- GitHub
+- Mobile Architecture
+- Software Engineering Best Practices
+
+---
+
+# 🏆 Why this Project?
+
+Unlike simple CRUD examples, JBank Mobile demonstrates how a professional Android application can be built using modern development practices.
+
+Key aspects include:
+
+- Production-ready architecture
+- Secure authentication
+- Token persistence
+- Reactive UI
+- Separation of concerns
+- Clean and scalable codebase
+- Enterprise-level organization
+
+---
+
+# 🎯 Learning Goals
+
+The main purpose of this project is to:
+
+- Learn modern Android development
+- Apply MVVM Architecture
+- Build scalable mobile applications
+- Integrate with REST APIs
+- Practice Clean Code
+- Demonstrate software engineering skills
+- Create a professional portfolio project
+
+---
+
+# 📚 Future Improvements
+
+- Unit Tests
+- UI Tests
+- Dependency Injection (Hilt/Koin)
+- Room Database
+- Offline Mode
+- Push Notifications
+- Biometric Authentication
+- Open Finance Integration
+- Charts and Analytics
+- AI Financial Assistant
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+If you'd like to improve this project:
+
+1. Fork this repository.
+2. Create a feature branch.
+3. Commit your changes.
+4. Push the branch.
+5. Open a Pull Request.
+
+---
+
+# 🐛 Reporting Issues
+
+Found a bug?
+
+Please open an Issue describing:
+
+- Expected behavior
+- Actual behavior
+- Android version
+- Device model
+- Screenshots (if applicable)
+
+---
+
+# 📜 License
+
+This project is licensed under the **MIT License**.
+
+Feel free to use it for learning and educational purposes.
+
+---
+
+# 👨‍💻 Developer
+
+## Jucelio Farias Coelho
+
+Android Developer • Backend Java Developer • Systems Analyst • Mathematics Teacher • Data Analytics Enthusiast
+
+### Tech Stack
+
+- Kotlin
+- Java
+- Spring Boot
+- Jetpack Compose
+- PostgreSQL
+- Docker
+- Firebase
+- Android
+- REST APIs
+- Git
+- GitHub
+
+---
+
+# 📫 Connect with Me
+
+LinkedIn
+
+https://www.linkedin.com/in/SEU-LINK
+
+GitHub
+
+https://github.com/SEU-USUARIO
+
+Portfolio
+
+https://SEU-SITE.com
+
+Email
+
+seuemail@email.com
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
+
+It helps the project gain visibility and motivates future improvements.
+
+---
+
+<div align="center">
+
+# ⭐ Thank You!
+
+## JBank Mobile
+
+Modern Android Banking Application
+
+Built with ❤️ using Kotlin + Jetpack Compose
+
+Designed and developed by
+
+### Jucelio Farias Coelho
+
+Android Developer • Java Backend Developer • Systems Analyst
+
+---
+
+### If you like this project, don't forget to leave a ⭐!
+
+</div>
