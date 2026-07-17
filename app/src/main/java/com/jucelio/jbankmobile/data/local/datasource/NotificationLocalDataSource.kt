@@ -18,6 +18,7 @@ class NotificationLocalDataSource @Inject constructor(
     suspend fun save(notification: NotificationEntity) =
         dao.insertNotification(notification)
 
+
     suspend fun saveAll(notifications: List<NotificationEntity>) =
         dao.replaceNotifications(notifications)
 

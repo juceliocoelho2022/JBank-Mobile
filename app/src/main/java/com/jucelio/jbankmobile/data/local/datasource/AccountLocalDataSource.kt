@@ -15,6 +15,7 @@ class AccountLocalDataSource @Inject constructor(
     suspend fun getAccounts(): List<AccountEntity> =
         dao.getAccounts()
 
+
     suspend fun getAccountById(id: Long): AccountEntity? =
         dao.getAccountById(id)
 

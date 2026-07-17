@@ -21,9 +21,12 @@ class TransactionLocalDataSource @Inject constructor(
     suspend fun save(transaction: TransactionEntity) =
         dao.insertTransaction(transaction)
 
+
+
     suspend fun saveAll(transactions: List<TransactionEntity>) =
         dao.replaceTransactions(transactions)
 
     suspend fun clear() =
         dao.clearTransactions()
+
 }
