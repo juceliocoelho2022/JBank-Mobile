@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NotificationRepositoryImpl @Inject constructor(
-    private val remote: NotificationRemoteDataSource
+    private val remoteDataSource: NotificationRemoteDataSource
 ) : NotificationRepository {
 
     override suspend fun getNotifications():
@@ -20,14 +20,13 @@ class NotificationRepositoryImpl @Inject constructor(
 
         return when (
             val result = safeApiCall {
-                remote.getNotifications()
+                remoteDataSource.getNotifications()
             }
         ) {
-
             is ApiResult.Success -> {
                 AppResult.Success(
-                    result.data.map {
-                        it.toDomain()
+                    data = result.data.map { dto ->
+                        dto.toDomain()
                     }
                 )
             }

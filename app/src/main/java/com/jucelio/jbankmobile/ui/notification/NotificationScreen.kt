@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.CreditCard
@@ -52,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jucelio.jbankmobile.domain.model.Notification
+
 private val Navy = Color(0xFF031B3A)
 private val Green = Color(0xFF00C96B)
 private val Background = Color(0xFFF4F6FA)
@@ -203,13 +203,15 @@ private fun NotificationContent(
 private fun NotificationCard(
     notification: Notification
 ) {
-    val color = notificationColor(notification.type)
+    val color = notificationColor(
+        notification.type
+    )
 
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (notification.read) {
+            containerColor = if (notification.isRead) {
                 Color.White
             } else {
                 color.copy(alpha = 0.07f)
@@ -227,7 +229,9 @@ private fun NotificationCard(
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        color = color.copy(alpha = 0.14f),
+                        color = color.copy(
+                            alpha = 0.14f
+                        ),
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -261,7 +265,7 @@ private fun NotificationCard(
                         fontWeight = FontWeight.Bold
                     )
 
-                    if (!notification.read) {
+                    if (!notification.isRead) {
                         Box(
                             modifier = Modifier
                                 .size(9.dp)
@@ -284,7 +288,9 @@ private fun NotificationCard(
                     lineHeight = 19.sp
                 )
 
-                if (notification.createdAt.isNotBlank()) {
+                if (
+                    notification.createdAt.isNotBlank()
+                ) {
                     Spacer(
                         modifier = Modifier.height(7.dp)
                     )
