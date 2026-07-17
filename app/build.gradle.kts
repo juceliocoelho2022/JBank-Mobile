@@ -14,6 +14,7 @@ android {
         applicationId = "com.jucelio.jbankmobile"
         minSdk = 26
         targetSdk = 35
+
         versionCode = 1
         versionName = "1.0"
 
@@ -25,10 +26,21 @@ android {
             "API_BASE_URL",
             "\"http://10.0.2.2:8081/\""
         )
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to
+                            "$projectDir/schemas"
+                )
+            }
+        }
     }
 
     buildTypes {
+
         release {
+
             isMinifyEnabled = false
 
             proguardFiles(
@@ -55,21 +67,44 @@ android {
     }
 
     packaging {
+
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+
+            excludes +=
+                "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
 
 dependencies {
+
+    //----------------------------------------
+    // Compose BOM
+    //----------------------------------------
+
     val composeBom =
-        platform("androidx.compose:compose-bom:2024.12.01")
+        platform(
+            "androidx.compose:compose-bom:2024.12.01"
+        )
 
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.activity:activity-compose:1.10.0")
+    //----------------------------------------
+    // Core Android
+    //----------------------------------------
+
+    implementation(
+        "androidx.core:core-ktx:1.15.0"
+    )
+
+    implementation(
+        "androidx.activity:activity-compose:1.10.0"
+    )
+
+    //----------------------------------------
+    // Lifecycle
+    //----------------------------------------
 
     implementation(
         "androidx.lifecycle:lifecycle-runtime-ktx:2.8.7"
@@ -83,17 +118,39 @@ dependencies {
         "androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7"
     )
 
+    //----------------------------------------
+    // Navigation
+    //----------------------------------------
+
     implementation(
         "androidx.navigation:navigation-compose:2.8.5"
     )
 
+    //----------------------------------------
+    // Jetpack Compose
+    //----------------------------------------
+
     implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.material3:material3")
+
+    implementation(
+        "androidx.compose.ui:ui-tooling-preview"
+    )
+
+    implementation(
+        "androidx.compose.foundation:foundation"
+    )
+
+    implementation(
+        "androidx.compose.material3:material3"
+    )
+
     implementation(
         "androidx.compose.material:material-icons-extended"
     )
+
+    //----------------------------------------
+    // Retrofit
+    //----------------------------------------
 
     implementation(
         "com.squareup.retrofit2:retrofit:2.11.0"
@@ -103,17 +160,34 @@ dependencies {
         "com.squareup.retrofit2:converter-gson:2.11.0"
     )
 
+    //----------------------------------------
+    // OkHttp
+    //----------------------------------------
+
     implementation(
         "com.squareup.okhttp3:logging-interceptor:4.12.0"
     )
+
+    //----------------------------------------
+    // Room Database
+    //----------------------------------------
+
+    implementation("androidx.room:room-runtime:2.7.2")
+    implementation("androidx.room:room-ktx:2.7.2")
+    kapt("androidx.room:room-compiler:2.7.2")
+
+    //----------------------------------------
+    // DataStore
+    //----------------------------------------
 
     implementation(
         "androidx.datastore:datastore-preferences:1.1.2"
     )
 
-    /*
-     * Hilt
-     */
+    //----------------------------------------
+    // Hilt
+    //----------------------------------------
+
     implementation(
         "com.google.dagger:hilt-android:2.57.1"
     )
@@ -121,6 +195,14 @@ dependencies {
     kapt(
         "com.google.dagger:hilt-compiler:2.57.1"
     )
+
+    implementation(
+        "androidx.hilt:hilt-navigation-compose:1.2.0"
+    )
+
+    //----------------------------------------
+    // CameraX
+    //----------------------------------------
 
     val cameraXVersion = "1.4.1"
 
@@ -140,12 +222,18 @@ dependencies {
         "androidx.camera:camera-view:$cameraXVersion"
     )
 
+    //----------------------------------------
+    // ML Kit
+    //----------------------------------------
+
     implementation(
         "com.google.mlkit:barcode-scanning:17.3.0"
     )
-    implementation(
-        "androidx.hilt:hilt-navigation-compose:1.2.0"
-    )
+
+    //----------------------------------------
+    // Debug
+    //----------------------------------------
+
     debugImplementation(
         "androidx.compose.ui:ui-tooling"
     )
@@ -154,9 +242,17 @@ dependencies {
         "androidx.compose.ui:ui-test-manifest"
     )
 
+    //----------------------------------------
+    // Unit Tests
+    //----------------------------------------
+
     testImplementation(
         "junit:junit:4.13.2"
     )
+
+    //----------------------------------------
+    // Instrumented Tests
+    //----------------------------------------
 
     androidTestImplementation(
         "androidx.test.ext:junit:1.2.1"
@@ -172,5 +268,6 @@ dependencies {
 }
 
 kapt {
+
     correctErrorTypes = true
 }
