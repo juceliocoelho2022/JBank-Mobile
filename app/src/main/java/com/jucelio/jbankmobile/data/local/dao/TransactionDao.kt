@@ -90,15 +90,41 @@ interface TransactionDao {
     @Query(
         """
         DELETE FROM transactions
+        WHERE sourceAccountId = :accountId
+           OR targetAccountId = :accountId
+        """
+    )
+    suspend fun deleteTransactionsByAccountId(
+        accountId: Long
+    )
+
+    @Query(
+        """
+        DELETE FROM transactions
         """
     )
     suspend fun clearTransactions()
+
+    @Transaction
+    suspend fun replaceTransactionsByAccountId(
+        accountId: Long,
+        transactions: List<TransactionEntity>
+    ) {
+        deleteTransactionsByAccountId(accountId)
+
+        if (transactions.isNotEmpty()) {
+            insertTransactions(transactions)
+        }
+    }
 
     @Transaction
     suspend fun replaceTransactions(
         transactions: List<TransactionEntity>
     ) {
         clearTransactions()
-        insertTransactions(transactions)
+
+        if (transactions.isNotEmpty()) {
+            insertTransactions(transactions)
+        }
     }
 }
