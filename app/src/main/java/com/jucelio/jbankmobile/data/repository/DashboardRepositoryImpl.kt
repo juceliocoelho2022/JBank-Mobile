@@ -17,47 +17,59 @@ class DashboardRepositoryImpl @Inject constructor(
 ) : DashboardRepository {
 
     override suspend fun getDashboard(): AppResult<Dashboard> {
+        return when (
+            val remoteResult = safeApiCall {
+                remoteDataSource.getDashboard()
+            }
+        ) {
+            is ApiResult.Success -> handleRemoteSuccess(
+                dashboardDto = remoteResult.data
+            )
 
-        val remoteResult = safeApiCall {
-            remoteDataSource.getDashboard()
+            is ApiResult.Error -> handleRemoteError(
+                message = remoteResult.message,
+                code = remoteResult.code
+            )
         }
+    }
 
-        return when (remoteResult) {
+    private suspend fun handleRemoteSuccess(
+        dashboardDto: com.jucelio.jbankmobile.data.remote.dto.DashboardResponseDto
+    ): AppResult<Dashboard> {
+        localDataSource.saveDashboard(
+            dto = dashboardDto
+        )
 
-            is ApiResult.Success -> {
-                localDataSource.saveDashboard(
-                    dto = remoteResult.data
-                )
+        return getCachedDashboardOrFailure(
+            fallbackMessage = "Não foi possível carregar o dashboard."
+        )
+    }
 
-                val cachedDashboard =
-                    localDataSource.getDashboard()
+    private suspend fun handleRemoteError(
+        message: String,
+        code: Int?
+    ): AppResult<Dashboard> {
+        return getCachedDashboardOrFailure(
+            fallbackMessage = message,
+            fallbackCode = code
+        )
+    }
 
-                if (cachedDashboard != null) {
-                    AppResult.Success(
-                        data = cachedDashboard
-                    )
-                } else {
-                    AppResult.Failure(
-                        message = "Não foi possível carregar o dashboard."
-                    )
-                }
-            }
+    private suspend fun getCachedDashboardOrFailure(
+        fallbackMessage: String,
+        fallbackCode: Int? = null
+    ): AppResult<Dashboard> {
+        val cachedDashboard = localDataSource.getDashboard()
 
-            is ApiResult.Error -> {
-                val cachedDashboard =
-                    localDataSource.getDashboard()
-
-                if (cachedDashboard != null) {
-                    AppResult.Success(
-                        data = cachedDashboard
-                    )
-                } else {
-                    AppResult.Failure(
-                        message = remoteResult.message,
-                        code = remoteResult.code
-                    )
-                }
-            }
+        return if (cachedDashboard != null) {
+            AppResult.Success(
+                data = cachedDashboard
+            )
+        } else {
+            AppResult.Failure(
+                message = fallbackMessage,
+                code = fallbackCode
+            )
         }
     }
 }
