@@ -3,6 +3,7 @@ package com.jucelio.jbankmobile.di
 import android.content.Context
 import androidx.room.Room
 import com.jucelio.jbankmobile.data.local.dao.AccountDao
+import com.jucelio.jbankmobile.data.local.dao.DashboardDao
 import com.jucelio.jbankmobile.data.local.dao.NotificationDao
 import com.jucelio.jbankmobile.data.local.dao.TransactionDao
 import com.jucelio.jbankmobile.data.local.database.JBankDatabase
@@ -22,6 +23,7 @@ object DatabaseModule {
     fun provideJBankDatabase(
         @ApplicationContext context: Context
     ): JBankDatabase {
+
         return Room.databaseBuilder(
             context,
             JBankDatabase::class.java,
@@ -32,23 +34,30 @@ object DatabaseModule {
     }
 
     @Provides
+    @Singleton
     fun provideAccountDao(
         database: JBankDatabase
-    ): AccountDao {
-        return database.accountDao()
-    }
+    ): AccountDao =
+        database.accountDao()
 
     @Provides
+    @Singleton
     fun provideTransactionDao(
         database: JBankDatabase
-    ): TransactionDao {
-        return database.transactionDao()
-    }
+    ): TransactionDao =
+        database.transactionDao()
 
     @Provides
+    @Singleton
     fun provideNotificationDao(
         database: JBankDatabase
-    ): NotificationDao {
-        return database.notificationDao()
-    }
+    ): NotificationDao =
+        database.notificationDao()
+
+    @Provides
+    @Singleton
+    fun provideDashboardDao(
+        database: JBankDatabase
+    ): DashboardDao =
+        database.dashboardDao()
 }

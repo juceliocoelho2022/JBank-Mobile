@@ -42,6 +42,13 @@ import com.jucelio.jbankmobile.ui.splash.SplashScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.jucelio.jbankmobile.ui.startup.StartupDestination
+import com.jucelio.jbankmobile.ui.startup.StartupViewModel
 private object Routes {
     const val SPLASH = "splash"
     const val LOGIN = "login"
@@ -76,15 +83,40 @@ fun JBankApp() {
          */
 
         composable(Routes.SPLASH) {
+
+            val startupViewModel: StartupViewModel = hiltViewModel()
+
+            val destination = startupViewModel.destination
+
+            var splashFinished by rememberSaveable {
+                mutableStateOf(false)
+            }
+
+            LaunchedEffect(
+                splashFinished,
+                destination
+            ) {
+                if (!splashFinished || destination == null) {
+                    return@LaunchedEffect
+                }
+
+                val targetRoute = when (destination) {
+                    StartupDestination.HOME -> Routes.HOME
+                    StartupDestination.LOGIN -> Routes.LOGIN
+                }
+
+                navController.navigate(targetRoute) {
+                    popUpTo(Routes.SPLASH) {
+                        inclusive = true
+                    }
+
+                    launchSingleTop = true
+                }
+            }
+
             SplashScreen(
                 onFinished = {
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.SPLASH) {
-                            inclusive = true
-                        }
-
-                        launchSingleTop = true
-                    }
+                    splashFinished = true
                 }
             )
         }
