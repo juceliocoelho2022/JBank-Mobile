@@ -9,7 +9,7 @@ import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.repository.AuthRepository
 import javax.inject.Inject
 import javax.inject.Singleton
-
+import kotlinx.coroutines.CancellationException
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val api: JBankApi,
@@ -54,18 +54,16 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logout(): AppResult<Unit> {
-        return runCatching {
+        return try {
             sessionManager.logout()
-        }.fold(
-            onSuccess = {
-                AppResult.Success(Unit)
-            },
-            onFailure = { error ->
-                AppResult.Failure(
-                    message = error.message
-                        ?: "Não foi possível encerrar a sessão."
-                )
-            }
-        )
+            AppResult.Success(Unit)
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Exception) {
+            AppResult.Failure(
+                message = error.message
+                    ?: "Não foi possível encerrar a sessão."
+            )
+        }
     }
 }

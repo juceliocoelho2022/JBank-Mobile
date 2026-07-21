@@ -1,0 +1,206 @@
+﻿====================================================
+C:\Users\Jucelio JDEV\Downloads\JBankMobile_JetpackCompose\JBankMobile\app\src\main\java\com\jucelio\jbankmobile\domain\usecase\GetDashboardUseCase.kt
+====================================================
+package com.jucelio.jbankmobile.domain.usecase
+
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.model.Dashboard
+import com.jucelio.jbankmobile.domain.repository.DashboardRepository
+import javax.inject.Inject
+
+class GetDashboardUseCase @Inject constructor(
+    private val repository: DashboardRepository
+) {
+
+    suspend operator fun invoke(): AppResult<Dashboard> {
+        return repository.getDashboard()
+    }
+}
+
+
+
+====================================================
+C:\Users\Jucelio JDEV\Downloads\JBankMobile_JetpackCompose\JBankMobile\app\src\main\java\com\jucelio\jbankmobile\domain\usecase\account\GetAccountsUseCase.kt
+====================================================
+package com.jucelio.jbankmobile.domain.usecase.account
+
+import com.jucelio.jbankmobile.domain.model.Account
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.repository.AccountRepository
+import javax.inject.Inject
+
+class GetAccountsUseCase @Inject constructor(
+    private val repository: AccountRepository
+) {
+
+    suspend operator fun invoke(): AppResult<List<Account>> {
+        return repository.getAccounts()
+    }
+}
+
+
+
+====================================================
+C:\Users\Jucelio JDEV\Downloads\JBankMobile_JetpackCompose\JBankMobile\app\src\main\java\com\jucelio\jbankmobile\domain\usecase\auth\LoginUseCase.kt
+====================================================
+package com.jucelio.jbankmobile.domain.usecase.auth
+
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.repository.AuthRepository
+import javax.inject.Inject
+
+/**
+ * Executa a regra de negÃ³cio de autenticaÃ§Ã£o.
+ */
+class LoginUseCase @Inject constructor(
+    private val repository: AuthRepository
+) {
+
+    suspend operator fun invoke(
+        email: String,
+        password: String
+    ): AppResult<Unit> {
+        val normalizedEmail = email.trim()
+            .lowercase()
+
+        if (normalizedEmail.isBlank()) {
+            return AppResult.Failure(
+                message = "Informe o seu e-mail."
+            )
+        }
+
+        if (!EMAIL_REGEX.matches(normalizedEmail)) {
+            return AppResult.Failure(
+                message = "Informe um e-mail vÃ¡lido."
+            )
+        }
+
+        if (password.isBlank()) {
+            return AppResult.Failure(
+                message = "Informe a sua senha."
+            )
+        }
+
+        if (password.length < MINIMUM_PASSWORD_LENGTH) {
+            return AppResult.Failure(
+                message = "A senha deve possuir pelo menos 6 caracteres."
+            )
+        }
+
+        return repository.login(
+            email = normalizedEmail,
+            password = password
+        )
+    }
+
+    private companion object {
+        const val MINIMUM_PASSWORD_LENGTH = 6
+
+        val EMAIL_REGEX =
+            Regex(
+                pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
+            )
+    }
+}
+
+
+
+====================================================
+C:\Users\Jucelio JDEV\Downloads\JBankMobile_JetpackCompose\JBankMobile\app\src\main\java\com\jucelio\jbankmobile\domain\usecase\auth\LogoutUseCase.kt
+====================================================
+package com.jucelio.jbankmobile.domain.usecase.auth
+
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.repository.AuthRepository
+import javax.inject.Inject
+
+/**
+ * Encerra a sessÃ£o autenticada do usuÃ¡rio.
+ */
+class LogoutUseCase @Inject constructor(
+    private val repository: AuthRepository
+) {
+
+    suspend operator fun invoke(): AppResult<Unit> {
+        return repository.logout()
+    }
+}
+
+
+
+====================================================
+C:\Users\Jucelio JDEV\Downloads\JBankMobile_JetpackCompose\JBankMobile\app\src\main\java\com\jucelio\jbankmobile\domain\usecase\dashboard\GetDashboardUseCase.kt
+====================================================
+package com.jucelio.jbankmobile.domain.usecase.dashboard
+
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.model.Dashboard
+import com.jucelio.jbankmobile.domain.repository.DashboardRepository
+import javax.inject.Inject
+
+/**
+ * Recupera o resumo financeiro apresentado na Home.
+ */
+class GetDashboardUseCase @Inject constructor(
+    private val repository: DashboardRepository
+) {
+
+    suspend operator fun invoke(): AppResult<Dashboard> {
+        return repository.getDashboard()
+    }
+}
+
+
+
+====================================================
+C:\Users\Jucelio JDEV\Downloads\JBankMobile_JetpackCompose\JBankMobile\app\src\main\java\com\jucelio\jbankmobile\domain\usecase\notification\GetNotificationsUseCase.kt
+====================================================
+package com.jucelio.jbankmobile.domain.usecase.notification
+
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.model.Notification
+import com.jucelio.jbankmobile.domain.repository.NotificationRepository
+import javax.inject.Inject
+
+class GetNotificationsUseCase @Inject constructor(
+    private val repository: NotificationRepository
+) {
+
+    suspend operator fun invoke():
+            AppResult<List<Notification>> {
+
+        return repository.getNotifications()
+    }
+}
+
+
+
+====================================================
+C:\Users\Jucelio JDEV\Downloads\JBankMobile_JetpackCompose\JBankMobile\app\src\main\java\com\jucelio\jbankmobile\domain\usecase\transaction\GetStatementUseCase.kt
+====================================================
+package com.jucelio.jbankmobile.domain.usecase.transaction
+
+import com.jucelio.jbankmobile.domain.model.AppResult
+import com.jucelio.jbankmobile.domain.model.Transaction
+import com.jucelio.jbankmobile.domain.repository.TransactionRepository
+import javax.inject.Inject
+
+class GetStatementUseCase @Inject constructor(
+    private val repository: TransactionRepository
+) {
+
+    suspend operator fun invoke(
+        accountId: Long
+    ): AppResult<List<Transaction>> {
+        if (accountId <= 0L) {
+            return AppResult.Failure(
+                message = "Conta invÃ¡lida."
+            )
+        }
+
+        return repository.getStatement(accountId)
+    }
+}
+
+
+
