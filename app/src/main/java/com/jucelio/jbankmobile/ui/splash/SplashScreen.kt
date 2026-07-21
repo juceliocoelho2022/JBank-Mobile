@@ -108,7 +108,7 @@ fun SplashScreen(
             CircularProgressIndicator(
                 modifier = Modifier.size(36.dp),
                 color = SplashPurpleLight,
-                strokeWidth = 4.dp
+                strokeWidth = 2.dp
             )
         }
     }
