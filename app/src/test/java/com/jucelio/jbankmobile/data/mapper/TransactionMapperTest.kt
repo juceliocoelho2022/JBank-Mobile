@@ -2,6 +2,7 @@ package com.jucelio.jbankmobile.data.mapper
 
 import com.jucelio.jbankmobile.fixtures.transaction.TransactionFixtures
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import java.math.BigDecimal
 
@@ -52,7 +53,6 @@ class TransactionMapperTest {
 
         val result = dto.toDomain()
 
-        assertEquals(0L, result.id)
         assertEquals("", result.type)
         assertEquals(BigDecimal.ZERO, result.amount)
         assertEquals("", result.description)
@@ -72,10 +72,38 @@ class TransactionMapperTest {
 
         val result = dto.toEntity()
 
-        assertEquals(0L, result.id)
         assertEquals("", result.type)
         assertEquals(BigDecimal.ZERO, result.amount)
         assertEquals("", result.description)
         assertEquals("", result.createdAt)
+    }
+
+    @Test
+    fun `toDomain deve gerar ids diferentes para transacoes sem id com conteudo diferente`() {
+
+        val first = TransactionFixtures.transactionResponseDto().copy(
+            id = null,
+            description = "Transacao A"
+        )
+
+        val second = TransactionFixtures.transactionResponseDto().copy(
+            id = null,
+            description = "Transacao B"
+        )
+
+        val firstResult = first.toDomain()
+        val secondResult = second.toDomain()
+
+        assertNotEquals(firstResult.id, secondResult.id)
+    }
+
+    @Test
+    fun `toDomain deve gerar o mesmo id de fallback de forma deterministica`() {
+
+        val dto = TransactionFixtures.transactionResponseDto().copy(
+            id = null
+        )
+
+        assertEquals(dto.toDomain().id, dto.toDomain().id)
     }
 }
