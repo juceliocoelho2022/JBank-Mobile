@@ -4,7 +4,6 @@ import com.jucelio.jbankmobile.data.local.datasource.AccountLocalDataSource
 import com.jucelio.jbankmobile.data.local.mapper.AccountLocalMapper
 import com.jucelio.jbankmobile.data.mapper.toEntity
 import com.jucelio.jbankmobile.data.remote.datasource.AccountRemoteDataSource
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.fixtures.account.AccountFixtures
 import io.mockk.coEvery
 import io.mockk.coVerify

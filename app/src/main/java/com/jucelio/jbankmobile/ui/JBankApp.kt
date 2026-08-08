@@ -41,6 +41,7 @@ import com.jucelio.jbankmobile.ui.profile.ProfileScreen
 import com.jucelio.jbankmobile.ui.splash.SplashScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModel
+import com.jucelio.jbankmobile.ui.welcome.WelcomeRoute
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,6 +52,9 @@ import com.jucelio.jbankmobile.ui.startup.StartupDestination
 import com.jucelio.jbankmobile.ui.startup.StartupViewModel
 private object Routes {
     const val SPLASH = "splash"
+    const val WELCOME = "welcome"
+    const val ACCOUNT_IDENTIFICATION = "account_identification"
+    const val REGISTER = "register"
     const val LOGIN = "login"
     const val HOME = "home"
 
@@ -102,7 +106,7 @@ fun JBankApp() {
 
                 val targetRoute = when (destination) {
                     StartupDestination.HOME -> Routes.HOME
-                    StartupDestination.LOGIN -> Routes.LOGIN
+                    StartupDestination.WELCOME -> Routes.WELCOME
                 }
 
                 navController.navigate(targetRoute) {
@@ -118,6 +122,56 @@ fun JBankApp() {
                 onFinished = {
                     splashFinished = true
                 }
+            )
+        }
+
+        /*
+         * ============================================================
+         * WELCOME
+         * ============================================================
+         */
+
+        composable(Routes.WELCOME) {
+            WelcomeRoute(
+                onNavigateToAccountIdentification = {
+                    navController.navigate(Routes.ACCOUNT_IDENTIFICATION) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToOpenAccount = {
+                    navController.navigate(Routes.REGISTER) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        /*
+         * ============================================================
+         * IDENTIFICAÇÃO DA CONTA - PROVISÓRIO
+         * ============================================================
+         */
+
+        composable(Routes.ACCOUNT_IDENTIFICATION) {
+            AccountIdentificationPlaceholderScreen(
+                onBack = { navController.popBackStack() },
+                onContinue = {
+                    navController.navigate(Routes.LOGIN) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        /*
+         * ============================================================
+         * ABERTURA DE CONTA - PROVISÓRIO
+         * ============================================================
+         */
+
+        composable(Routes.REGISTER) {
+            RegisterPlaceholderScreen(
+                onBack = { navController.popBackStack() }
             )
         }
 
@@ -161,22 +215,22 @@ fun JBankApp() {
          */
 
 
-            composable(Routes.HOME) {
-                val homeViewModel: DashboardViewModel =
-                    hiltViewModel()
+        composable(Routes.HOME) {
+            val homeViewModel: DashboardViewModel =
+                hiltViewModel()
 
-                HomeScreen(
-                    state = homeViewModel.state,
+            HomeScreen(
+                state = homeViewModel.state,
 
-                    onRefresh = homeViewModel::load,
+                onRefresh = homeViewModel::load,
 
-                    onLogout = {
-                        homeViewModel.logout {
-                            navigateToLogin(
-                                navController = navController
-                            )
-                        }
-                    },
+                onLogout = {
+                    homeViewModel.logout {
+                        navigateToLogin(
+                            navController = navController
+                        )
+                    }
+                },
 
                 /*
                  * Ação rápida "Contas".
@@ -663,6 +717,106 @@ fun JBankApp() {
                     println("Abrir sobre o JBank")
                 }
             )
+        }
+    }
+}
+
+/*
+ * ================================================================
+ * TELA PROVISÓRIA DE IDENTIFICAÇÃO DA CONTA
+ * ================================================================
+ */
+
+@Composable
+private fun AccountIdentificationPlaceholderScreen(
+    onBack: () -> Unit,
+    onContinue: () -> Unit
+) {
+    Scaffold(
+        containerColor = Color(0xFF060712)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Vamos localizar sua conta",
+                color = Color.White,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "A tela de CPF será implementada na próxima etapa.",
+                color = Color(0xFFB6B1C2),
+                fontSize = 15.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(26.dp))
+
+            Button(onClick = onContinue) {
+                Text(text = "Continuar para o login")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(onClick = onBack) {
+                Text(text = "Voltar")
+            }
+        }
+    }
+}
+
+/*
+ * ================================================================
+ * TELA PROVISÓRIA DE ABERTURA DE CONTA
+ * ================================================================
+ */
+
+@Composable
+private fun RegisterPlaceholderScreen(
+    onBack: () -> Unit
+) {
+    Scaffold(
+        containerColor = Color(0xFF060712)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Abrir uma conta",
+                color = Color.White,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "O fluxo de cadastro será criado em seguida.",
+                color = Color(0xFFB6B1C2),
+                fontSize = 15.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(26.dp))
+
+            Button(onClick = onBack) {
+                Text(text = "Voltar")
+            }
         }
     }
 }

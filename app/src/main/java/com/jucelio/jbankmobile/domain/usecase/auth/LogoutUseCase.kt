@@ -1,17 +1,15 @@
 package com.jucelio.jbankmobile.domain.usecase.auth
 
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.repository.AuthRepository
-import javax.inject.Inject
+import com.jucelio.jbankmobile.domain.usecase.BaseUseCase
 
-/**
- * Encerra a sessão autenticada do usuário.
- */
-class LogoutUseCase @Inject constructor(
+class LogoutUseCase(
     private val repository: AuthRepository
-) {
+) : BaseUseCase<Unit, Unit> {
 
-    suspend operator fun invoke(): AppResult<Unit> {
-        return repository.logout()
+    override suspend fun invoke(
+        param: Unit
+    ) {
+        repository.logout()
     }
 }

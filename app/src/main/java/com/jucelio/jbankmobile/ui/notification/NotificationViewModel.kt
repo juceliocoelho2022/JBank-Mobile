@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Notification
 import com.jucelio.jbankmobile.domain.usecase.notification.GetNotificationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -4,7 +4,6 @@ import com.jucelio.jbankmobile.data.local.datasource.TransactionLocalDataSource
 import com.jucelio.jbankmobile.data.local.mapper.TransactionLocalMapper
 import com.jucelio.jbankmobile.data.mapper.toEntity
 import com.jucelio.jbankmobile.data.remote.datasource.TransactionRemoteDataSource
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.fixtures.transaction.TransactionFixtures
 import io.mockk.*
 import kotlinx.coroutines.CancellationException

@@ -1,6 +1,5 @@
 package com.jucelio.jbankmobile.fixtures.notification
 
-import com.jucelio.jbankmobile.data.remote.dto.NotificationResponseDto
 import com.jucelio.jbankmobile.domain.model.Notification
 
 object NotificationFixtures {

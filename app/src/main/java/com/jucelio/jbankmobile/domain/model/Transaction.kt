@@ -4,10 +4,16 @@ import java.math.BigDecimal
 
 data class Transaction(
     val id: Long,
-    val type: String,
-    val amount: BigDecimal,
     val description: String,
-    val sourceAccountId: Long?,
-    val targetAccountId: Long?,
-    val createdAt: String
+    val amount: BigDecimal,
+    val date: String,
+    val type: TransactionType
 )
+
+enum class TransactionType {
+    DEPOSIT,
+    WITHDRAW,
+    PIX,
+    TRANSFER,
+    PAYMENT
+}

@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Transaction
 import com.jucelio.jbankmobile.domain.usecase.transaction.GetStatementUseCase
 enum class TransactionFilter {

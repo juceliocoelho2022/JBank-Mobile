@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Dashboard
 import com.jucelio.jbankmobile.domain.usecase.auth.LogoutUseCase
 import com.jucelio.jbankmobile.domain.usecase.dashboard.GetDashboardUseCase

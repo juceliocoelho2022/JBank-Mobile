@@ -1,6 +1,5 @@
 package com.jucelio.jbankmobile.domain.usecase.transaction
 
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Transaction
 import com.jucelio.jbankmobile.domain.repository.TransactionRepository
 import javax.inject.Inject

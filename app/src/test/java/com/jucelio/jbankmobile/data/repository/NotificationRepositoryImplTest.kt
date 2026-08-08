@@ -2,7 +2,6 @@ package com.jucelio.jbankmobile.data.repository
 
 import com.jucelio.jbankmobile.data.mapper.toDomain
 import com.jucelio.jbankmobile.data.remote.datasource.NotificationRemoteDataSource
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.fixtures.notification.NotificationFixtures
 import io.mockk.coEvery
 import io.mockk.coVerify

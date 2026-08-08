@@ -1,10 +1,9 @@
 package com.jucelio.jbankmobile.data.repository
 
-import com.jucelio.jbankmobile.core.network.ApiResult
+import com.jucelio.jbankmobile.core.network.model.ApiResult
 import com.jucelio.jbankmobile.core.network.safeApiCall
 import com.jucelio.jbankmobile.data.mapper.toDomain
 import com.jucelio.jbankmobile.data.remote.datasource.NotificationRemoteDataSource
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Notification
 import com.jucelio.jbankmobile.domain.repository.NotificationRepository
 import javax.inject.Inject

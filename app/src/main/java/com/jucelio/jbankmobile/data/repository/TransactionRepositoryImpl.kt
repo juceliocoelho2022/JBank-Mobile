@@ -1,12 +1,11 @@
 package com.jucelio.jbankmobile.data.repository
 
-import com.jucelio.jbankmobile.core.network.ApiResult
+import com.jucelio.jbankmobile.core.network.model.ApiResult
 import com.jucelio.jbankmobile.core.network.safeApiCall
 import com.jucelio.jbankmobile.data.local.datasource.TransactionLocalDataSource
 import com.jucelio.jbankmobile.data.local.mapper.TransactionLocalMapper
 import com.jucelio.jbankmobile.data.mapper.toEntity
 import com.jucelio.jbankmobile.data.remote.datasource.TransactionRemoteDataSource
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Transaction
 import com.jucelio.jbankmobile.domain.repository.TransactionRepository
 import javax.inject.Inject

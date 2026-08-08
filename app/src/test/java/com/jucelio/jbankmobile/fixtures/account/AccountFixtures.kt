@@ -1,6 +1,5 @@
 package com.jucelio.jbankmobile.fixtures.account
 
-import com.jucelio.jbankmobile.data.remote.dto.AccountResponseDto
 import com.jucelio.jbankmobile.domain.model.Account
 import java.math.BigDecimal
 

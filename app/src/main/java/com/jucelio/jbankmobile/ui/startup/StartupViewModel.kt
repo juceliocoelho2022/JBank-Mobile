@@ -1,5 +1,5 @@
 package com.jucelio.jbankmobile.ui.startup
-
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 enum class StartupDestination {
-    LOGIN,
+    WELCOME,
     HOME
 }
 
@@ -29,15 +29,10 @@ class StartupViewModel @Inject constructor(
 
     private fun checkSession() {
         viewModelScope.launch {
-            destination = runCatching {
-                if (sessionManager.isAuthenticated()) {
-                    StartupDestination.HOME
-                } else {
-                    StartupDestination.LOGIN
-                }
-            }.getOrElse {
-                StartupDestination.LOGIN
-            }
+
+            Log.d("JBANK", "Startup -> WELCOME")
+
+            destination = StartupDestination.WELCOME
         }
     }
 }

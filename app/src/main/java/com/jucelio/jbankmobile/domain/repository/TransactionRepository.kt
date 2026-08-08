@@ -1,11 +1,12 @@
 package com.jucelio.jbankmobile.domain.repository
 
-import com.jucelio.jbankmobile.domain.model.AppResult
-import com.jucelio.jbankmobile.domain.model.Transaction
+import java.math.BigDecimal
 
-interface TransactionRepository {
+interface TransferRepository {
 
-    suspend fun getStatement(
-        accountId: Long
-    ): AppResult<List<Transaction>>
+    suspend fun transfer(
+        agency: String,
+        account: String,
+        amount: BigDecimal
+    )
 }

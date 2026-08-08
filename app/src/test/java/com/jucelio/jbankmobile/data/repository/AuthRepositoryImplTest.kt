@@ -4,7 +4,6 @@ import com.jucelio.jbankmobile.core.session.SessionManager
 import com.jucelio.jbankmobile.data.remote.JBankApi
 import com.jucelio.jbankmobile.data.remote.dto.LoginRequest
 import com.jucelio.jbankmobile.data.remote.dto.LoginResponse
-import com.jucelio.jbankmobile.domain.model.AppResult
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified

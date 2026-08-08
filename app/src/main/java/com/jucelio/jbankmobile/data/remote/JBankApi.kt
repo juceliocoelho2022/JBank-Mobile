@@ -1,10 +1,8 @@
 package com.jucelio.jbankmobile.data.remote
 
-import com.jucelio.jbankmobile.data.remote.dto.AccountResponseDto
 import com.jucelio.jbankmobile.data.remote.dto.DashboardResponseDto
 import com.jucelio.jbankmobile.data.remote.dto.LoginRequest
 import com.jucelio.jbankmobile.data.remote.dto.LoginResponse
-import com.jucelio.jbankmobile.data.remote.dto.NotificationResponseDto
 import com.jucelio.jbankmobile.data.remote.dto.TransactionResponseDto
 import retrofit2.http.Body
 import retrofit2.http.GET

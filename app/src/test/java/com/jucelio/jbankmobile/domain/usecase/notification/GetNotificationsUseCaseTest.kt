@@ -1,6 +1,5 @@
 package com.jucelio.jbankmobile.domain.usecase.notification
 
-import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Notification
 import com.jucelio.jbankmobile.domain.repository.NotificationRepository
 import io.mockk.coEvery
