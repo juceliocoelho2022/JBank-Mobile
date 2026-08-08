@@ -1,5 +1,6 @@
 package com.jucelio.jbankmobile.data.repository
 
+import com.jucelio.jbankmobile.data.local.datasource.NotificationLocalDataSource
 import com.jucelio.jbankmobile.data.mapper.toDomain
 import com.jucelio.jbankmobile.data.remote.datasource.NotificationRemoteDataSource
 import com.jucelio.jbankmobile.domain.model.AppResult
@@ -20,14 +21,20 @@ import java.net.SocketTimeoutException
 class NotificationRepositoryImplTest {
 
     private lateinit var remoteDataSource: NotificationRemoteDataSource
+    private lateinit var localDataSource: NotificationLocalDataSource
     private lateinit var repository: NotificationRepositoryImpl
 
     @Before
     fun setup() {
         remoteDataSource = mockk()
+        localDataSource = mockk()
+
+        coEvery { localDataSource.saveAll(any()) } returns Unit
+        coEvery { localDataSource.getNotifications() } returns emptyList()
 
         repository = NotificationRepositoryImpl(
-            remoteDataSource = remoteDataSource
+            remoteDataSource = remoteDataSource,
+            localDataSource = localDataSource
         )
     }
 

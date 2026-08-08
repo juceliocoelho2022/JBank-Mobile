@@ -53,7 +53,7 @@ class LoginUseCase @Inject constructor(
 
         val EMAIL_REGEX =
             Regex(
-                pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
+                pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)+$"
             )
     }
 }

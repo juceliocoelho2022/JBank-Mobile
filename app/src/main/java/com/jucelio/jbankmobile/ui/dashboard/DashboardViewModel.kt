@@ -30,14 +30,24 @@ class DashboardViewModel @Inject constructor(
     )
         private set
 
+    /**
+     * Guarda se já existe uma carga em andamento. `state.isLoading`
+     * não pode ser usado para isso porque seu valor inicial já é
+     * `true` (para exibir o spinner antes da primeira carga), o que
+     * permitiria duas chamadas concorrentes a load() no início.
+     */
+    private var isLoadInFlight = false
+
     init {
         load()
     }
 
     fun load() {
-        if (state.isLoading && state.data != null) {
+        if (isLoadInFlight) {
             return
         }
+
+        isLoadInFlight = true
 
         viewModelScope.launch {
             state = state.copy(
@@ -64,6 +74,8 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             }
+
+            isLoadInFlight = false
         }
     }
 
