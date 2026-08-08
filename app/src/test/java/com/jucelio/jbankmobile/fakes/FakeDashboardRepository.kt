@@ -1,5 +1,6 @@
 package com.jucelio.jbankmobile.fakes
 
+import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Dashboard
 import com.jucelio.jbankmobile.domain.repository.DashboardRepository
 import com.jucelio.jbankmobile.fixtures.dashboard.DashboardFixtures

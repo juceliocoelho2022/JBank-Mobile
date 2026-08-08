@@ -2,6 +2,7 @@ package com.jucelio.jbankmobile.ui.pix
 
 import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.provider.ContactsContract
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.jucelio.jbankmobile.ui.pix.CentralPixScreen
-import com.jucelio.jbankmobile.ui.pix.PixScreen
+import androidx.core.content.ContextCompat
+import java.math.BigDecimal
 enum class PixKeyType(
     val label: String
 ) {
@@ -63,18 +64,6 @@ fun PixScreen(
         mutableStateOf<String?>(null)
     }
 
-    val contactPermissionLauncher =
-        rememberLauncherForActivityResult(
-            contract =
-                ActivityResultContracts.RequestPermission()
-        ) { granted ->
-
-            if (!granted) {
-                errorMessage =
-                    "Permissão para acessar contatos não concedida."
-            }
-        }
-
     val contactPickerLauncher =
         rememberLauncherForActivityResult(
             contract =
@@ -95,6 +84,20 @@ fun PixScreen(
             } else {
                 errorMessage =
                     "Não foi possível localizar o telefone do contato."
+            }
+        }
+
+    val contactPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract =
+                ActivityResultContracts.RequestPermission()
+        ) { granted ->
+
+            if (granted) {
+                contactPickerLauncher.launch(null)
+            } else {
+                errorMessage =
+                    "Permissão para acessar contatos não concedida."
             }
         }
 
@@ -208,11 +211,19 @@ fun PixScreen(
                     if (selectedType == PixKeyType.PHONE) {
                         IconButton(
                             onClick = {
-                                contactPermissionLauncher.launch(
-                                    Manifest.permission.READ_CONTACTS
-                                )
+                                val hasContactsPermission =
+                                    ContextCompat.checkSelfPermission(
+                                        context,
+                                        Manifest.permission.READ_CONTACTS
+                                    ) == PackageManager.PERMISSION_GRANTED
 
-                                contactPickerLauncher.launch(null)
+                                if (hasContactsPermission) {
+                                    contactPickerLauncher.launch(null)
+                                } else {
+                                    contactPermissionLauncher.launch(
+                                        Manifest.permission.READ_CONTACTS
+                                    )
+                                }
                             }
                         ) {
                             Icon(
@@ -298,9 +309,13 @@ fun PixScreen(
                         return@Button
                     }
 
+                    val parsedAmount = amount
+                        .replace(",", ".")
+                        .toBigDecimalOrNull()
+
                     if (
-                        amount.replace(",", ".")
-                            .toBigDecimalOrNull() == null
+                        parsedAmount == null ||
+                        parsedAmount <= BigDecimal.ZERO
                     ) {
                         errorMessage =
                             "Informe um valor válido."

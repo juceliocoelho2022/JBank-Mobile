@@ -1,5 +1,6 @@
 package com.jucelio.jbankmobile.domain.usecase.dashboard
 
+import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Dashboard
 import com.jucelio.jbankmobile.domain.repository.DashboardRepository
 import javax.inject.Inject

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.model.Dashboard
 import com.jucelio.jbankmobile.domain.usecase.auth.LogoutUseCase
 import com.jucelio.jbankmobile.domain.usecase.dashboard.GetDashboardUseCase
@@ -29,14 +30,24 @@ class DashboardViewModel @Inject constructor(
     )
         private set
 
+    /**
+     * Guarda se já existe uma carga em andamento. `state.isLoading`
+     * não pode ser usado para isso porque seu valor inicial já é
+     * `true` (para exibir o spinner antes da primeira carga), o que
+     * permitiria duas chamadas concorrentes a load() no início.
+     */
+    private var isLoadInFlight = false
+
     init {
         load()
     }
 
     fun load() {
-        if (state.isLoading && state.data != null) {
+        if (isLoadInFlight) {
             return
         }
+
+        isLoadInFlight = true
 
         viewModelScope.launch {
             state = state.copy(
@@ -63,6 +74,8 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             }
+
+            isLoadInFlight = false
         }
     }
 

@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.jucelio.jbankmobile.domain.model.Account
+import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.usecase.account.GetAccountsUseCase
 data class AccountUiState(
     val isLoading: Boolean = true,

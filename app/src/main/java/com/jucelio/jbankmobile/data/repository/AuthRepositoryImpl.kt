@@ -1,69 +1,67 @@
 package com.jucelio.jbankmobile.data.repository
 
-import com.jucelio.jbankmobile.data.local.TokenDataStore
-import com.jucelio.jbankmobile.data.remote.auth.AuthApi
-import com.jucelio.jbankmobile.data.remote.auth.LoginRequest
+import com.jucelio.jbankmobile.core.network.ApiResult
+import com.jucelio.jbankmobile.core.network.safeApiCall
+import com.jucelio.jbankmobile.core.session.SessionManager
+import com.jucelio.jbankmobile.data.remote.JBankApi
+import com.jucelio.jbankmobile.data.remote.dto.LoginRequest
+import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.repository.AuthRepository
-import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 import javax.inject.Singleton
-
+import kotlinx.coroutines.CancellationException
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
-    private val authApi: AuthApi,
-    private val tokenDataStore: TokenDataStore
+    private val api: JBankApi,
+    private val sessionManager: SessionManager
 ) : AuthRepository {
 
     override suspend fun login(
         email: String,
         password: String
     ): AppResult<Unit> {
-        return try {
-            val response = authApi.login(
-                request = LoginRequest(
-                    email = email,
-                    password = password
-                )
-            )
-
-            if (response.isSuccessful) {
-                AppResult.Success(Unit)
-            } else {
-                AppResult.Failure(
-                    message = mapErrorMessage(
-                        code = response.code()
+        return when (
+            val result = safeApiCall {
+                api.login(
+                    LoginRequest(
+                        email = email,
+                        password = password
                     )
                 )
             }
-        } catch (exception: CancellationException) {
-            throw exception
-        } catch (exception: Exception) {
-            AppResult.Failure(
-                message = "Não foi possível conectar ao servidor."
-            )
+        ) {
+            is ApiResult.Success -> {
+                val token = result.data.token
+
+                if (token.isBlank()) {
+                    AppResult.Failure(
+                        message = "A API retornou um token vazio."
+                    )
+                } else {
+                    sessionManager.saveAccessToken(token)
+
+                    AppResult.Success(Unit)
+                }
+            }
+
+            is ApiResult.Error -> {
+                AppResult.Failure(
+                    message = result.message,
+                    code = result.code
+                )
+            }
         }
     }
 
-    private fun mapErrorMessage(
-        code: Int
-    ): String {
-        return when (code) {
-            400 -> "Dados de acesso inválidos."
-            401 -> "E-mail ou senha incorretos."
-            403 -> "Acesso não autorizado."
-            404 -> "Usuário não encontrado."
-            500 -> "Erro interno no servidor."
-            else -> "Não foi possível acessar sua conta."
-        }
-    }
     override suspend fun logout(): AppResult<Unit> {
         return try {
-            tokenDataStore.clearSession()
-
+            sessionManager.logout()
             AppResult.Success(Unit)
-        } catch (exception: Exception) {
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Exception) {
             AppResult.Failure(
-                message = exception.message
+                message = error.message
                     ?: "Não foi possível encerrar a sessão."
             )
         }

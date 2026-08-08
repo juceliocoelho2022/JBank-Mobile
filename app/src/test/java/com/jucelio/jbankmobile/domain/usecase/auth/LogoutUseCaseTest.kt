@@ -1,5 +1,6 @@
 package com.jucelio.jbankmobile.domain.usecase.auth
 
+import com.jucelio.jbankmobile.domain.model.AppResult
 import com.jucelio.jbankmobile.domain.repository.AuthRepository
 import io.mockk.coEvery
 import io.mockk.mockk

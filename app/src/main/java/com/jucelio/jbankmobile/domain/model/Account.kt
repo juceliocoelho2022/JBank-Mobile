@@ -2,15 +2,14 @@ package com.jucelio.jbankmobile.domain.model
 
 import java.math.BigDecimal
 
+/**
+ * Modelo de domínio da conta bancária.
+ */
 data class Account(
     val id: Long,
-    val agency: String,
     val number: String,
+    val type: String,
     val balance: BigDecimal,
-    val type: AccountType
+    val active: Boolean,
+    val customerId: Long?
 )
-
-enum class AccountType {
-    CHECKING,
-    SAVINGS
-}
