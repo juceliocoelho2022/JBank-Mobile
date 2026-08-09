@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class DashboardUiState(
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = false,
     val data: Dashboard? = null,
     val errorMessage: String? = null
 )
@@ -35,7 +35,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun load() {
-        if (state.isLoading && state.data != null) {
+        if (state.isLoading) {
             return
         }
 
