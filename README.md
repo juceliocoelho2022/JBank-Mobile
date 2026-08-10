@@ -450,6 +450,7 @@ Password
 | POST /api/transfer | Bank transfer |
 | GET /api/transactions | Statement |
 | GET /api/profile | User profile |
+| GET /api/portfolio | Investment portfolio |
 
 ---
 
@@ -484,7 +485,7 @@ Password
 - [ ] Debit Card
 - [ ] QR Code PIX
 - [ ] Notifications
-- [ ] Investments
+- [x] Investments
 
 ---
 

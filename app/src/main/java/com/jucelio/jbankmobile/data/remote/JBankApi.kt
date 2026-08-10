@@ -2,6 +2,7 @@ package com.jucelio.jbankmobile.data.remote
 
 import com.jucelio.jbankmobile.data.remote.dto.AccountResponseDto
 import com.jucelio.jbankmobile.data.remote.dto.DashboardResponseDto
+import com.jucelio.jbankmobile.data.remote.dto.InvestmentResponseDto
 import com.jucelio.jbankmobile.data.remote.dto.LoginRequest
 import com.jucelio.jbankmobile.data.remote.dto.LoginResponse
 import com.jucelio.jbankmobile.data.remote.dto.NotificationResponseDto
@@ -31,4 +32,7 @@ interface JBankApi {
 
     @GET("api/notifications")
     suspend fun getNotifications(): List<NotificationResponseDto>
+
+    @GET("api/portfolio")
+    suspend fun getPortfolio(): List<InvestmentResponseDto>
 }

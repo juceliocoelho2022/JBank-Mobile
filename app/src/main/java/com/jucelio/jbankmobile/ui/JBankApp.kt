@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -37,6 +36,8 @@ import com.jucelio.jbankmobile.ui.pix.CentralPixScreen
 import com.jucelio.jbankmobile.ui.pix.PixQrResultScreen
 import com.jucelio.jbankmobile.ui.pix.PixQrScannerScreen
 import com.jucelio.jbankmobile.ui.pix.PixScreen
+import com.jucelio.jbankmobile.ui.portfolio.PortfolioScreen
+import com.jucelio.jbankmobile.ui.portfolio.PortfolioViewModel
 import com.jucelio.jbankmobile.ui.profile.ProfileScreen
 import com.jucelio.jbankmobile.ui.splash.SplashScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionScreen
@@ -568,10 +569,16 @@ fun JBankApp() {
          */
 
         composable(Routes.INVESTMENTS) {
-            InvestmentsPlaceholderScreen(
+            val portfolioViewModel: PortfolioViewModel = hiltViewModel()
+
+            PortfolioScreen(
+                state = portfolioViewModel.state,
+
                 onBack = {
                     navController.popBackStack()
-                }
+                },
+
+                onRefresh = portfolioViewModel::loadInvestments
             )
         }
 
@@ -711,71 +718,6 @@ private fun CardsPlaceholderScreen(
 
             Text(
                 text = "A página premium de cartões será criada nesta rota.",
-                color = Color(0xFFB6B1C2),
-                fontSize = 15.sp,
-                lineHeight = 21.sp,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(
-                modifier = Modifier.height(26.dp)
-            )
-
-            Button(
-                onClick = onBack
-            ) {
-                Text(
-                    text = "Voltar"
-                )
-            }
-        }
-    }
-}
-
-/*
- * ================================================================
- * TELA PROVISÓRIA DE INVESTIMENTOS
- * ================================================================
- */
-
-@Composable
-private fun InvestmentsPlaceholderScreen(
-    onBack: () -> Unit
-) {
-    Scaffold(
-        containerColor = Color(0xFF060712)
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.ShowChart,
-                contentDescription = "Investimentos",
-                tint = Color(0xFFB45CFF)
-            )
-
-            Spacer(
-                modifier = Modifier.height(18.dp)
-            )
-
-            Text(
-                text = "Investimentos",
-                color = Color.White,
-                fontSize = 29.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(
-                modifier = Modifier.height(10.dp)
-            )
-
-            Text(
-                text = "A página de investimentos será criada nesta rota.",
                 color = Color(0xFFB6B1C2),
                 fontSize = 15.sp,
                 lineHeight = 21.sp,

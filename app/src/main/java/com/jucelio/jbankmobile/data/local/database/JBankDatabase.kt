@@ -6,11 +6,13 @@ import androidx.room.TypeConverters
 import com.jucelio.jbankmobile.data.local.converter.BigDecimalConverter
 import com.jucelio.jbankmobile.data.local.dao.AccountDao
 import com.jucelio.jbankmobile.data.local.dao.DashboardDao
+import com.jucelio.jbankmobile.data.local.dao.InvestmentDao
 import com.jucelio.jbankmobile.data.local.dao.NotificationDao
 import com.jucelio.jbankmobile.data.local.dao.TransactionDao
 import com.jucelio.jbankmobile.data.local.entity.AccountEntity
 import com.jucelio.jbankmobile.data.local.entity.DashboardEntity
 import com.jucelio.jbankmobile.data.local.entity.DashboardTransactionEntity
+import com.jucelio.jbankmobile.data.local.entity.InvestmentEntity
 import com.jucelio.jbankmobile.data.local.entity.NotificationEntity
 import com.jucelio.jbankmobile.data.local.entity.TransactionEntity
 
@@ -20,9 +22,10 @@ import com.jucelio.jbankmobile.data.local.entity.TransactionEntity
         TransactionEntity::class,
         NotificationEntity::class,
         DashboardEntity::class,
-        DashboardTransactionEntity::class
+        DashboardTransactionEntity::class,
+        InvestmentEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 @TypeConverters(
@@ -37,6 +40,8 @@ abstract class JBankDatabase : RoomDatabase() {
     abstract fun notificationDao(): NotificationDao
 
     abstract fun dashboardDao(): DashboardDao
+
+    abstract fun investmentDao(): InvestmentDao
 
     companion object {
         const val DATABASE_NAME = "jbank_database"

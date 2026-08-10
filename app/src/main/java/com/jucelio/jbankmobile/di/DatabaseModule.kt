@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.jucelio.jbankmobile.data.local.dao.AccountDao
 import com.jucelio.jbankmobile.data.local.dao.DashboardDao
+import com.jucelio.jbankmobile.data.local.dao.InvestmentDao
 import com.jucelio.jbankmobile.data.local.dao.NotificationDao
 import com.jucelio.jbankmobile.data.local.dao.TransactionDao
 import com.jucelio.jbankmobile.data.local.database.JBankDatabase
@@ -60,4 +61,11 @@ object DatabaseModule {
         database: JBankDatabase
     ): DashboardDao =
         database.dashboardDao()
+
+    @Provides
+    @Singleton
+    fun provideInvestmentDao(
+        database: JBankDatabase
+    ): InvestmentDao =
+        database.investmentDao()
 }
