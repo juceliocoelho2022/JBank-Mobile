@@ -29,6 +29,15 @@ public class ItemVendaTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    public void substituir(int linha, ItemVenda item) {
+        itens.set(linha, item);
+        fireTableDataChanged();
+    }
+
+    public ItemVenda getItem(int linha) {
+        return itens.get(linha);
+    }
+
     public void limpar() {
         itens.clear();
         fireTableDataChanged();

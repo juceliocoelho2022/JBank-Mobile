@@ -15,12 +15,14 @@ dados externo — os dados ficam salvos localmente na própria máquina.
 
 ## ✨ Funcionalidades
 
-| Módulo | O que faz |
+Organizado em 4 abas: **Pedidos · Admin · Finanças · Dashboard**.
+
+| Aba | O que faz |
 |--------|-----------|
-| **Início (Dashboard)** | Vendas e faturamento do dia, total de produtos, valor em estoque e alertas de estoque baixo / vencimento. |
-| **PDV (Ponto de Venda)** | Busca produtos, monta o carrinho, aplica desconto, escolhe a forma de pagamento e finaliza a venda dando **baixa automática no estoque**. |
-| **Estoque** | Cadastra, edita, remove e busca produtos (nome, categoria, fabricante, código de barras, preços de custo/venda, quantidade, estoque mínimo, validade e se exige receita). |
-| **Vendas** | Histórico de todas as vendas, total faturado e detalhamento item a item (duplo clique na venda). |
+| **Pedidos** | Registra o pedido: **dados do cliente** (nome, telefone, endereço), **taxa de entrega**, adiciona produtos, edita/remove itens, escolhe a forma de pagamento e **salva o pedido** dando **baixa automática no estoque**. |
+| **Admin** | Cadastra, edita, remove e busca produtos (nome, categoria, fabricante, código de barras, preços de custo/venda, quantidade, estoque mínimo, validade e se exige receita). |
+| **Finanças** | Histórico de todos os pedidos, total faturado e detalhamento item a item (duplo clique no pedido). |
+| **Dashboard** | Vendas e faturamento do dia, total de produtos, valor em estoque e alertas de estoque baixo / vencimento. |
 
 Regras de negócio já tratadas: não vende acima do estoque disponível, valida
 código de barras duplicado, sinaliza produtos vencidos e próximos do

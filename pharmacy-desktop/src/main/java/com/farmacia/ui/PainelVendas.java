@@ -104,7 +104,20 @@ public class PainelVendas extends JPanel {
         }
         Venda v = modelo.getItem(tabela.convertRowIndexToModel(linha));
         StringBuilder sb = new StringBuilder();
-        sb.append("Venda #").append(v.getId()).append('\n');
+        sb.append("Pedido #").append(v.getId()).append('\n');
+        if (v.getClienteNome() != null && !v.getClienteNome().isBlank()) {
+            sb.append("Cliente: ").append(v.getClienteNome()).append('\n');
+        }
+        if (v.getClienteTelefone() != null
+                && !v.getClienteTelefone().isBlank()) {
+            sb.append("Telefone: ")
+                    .append(v.getClienteTelefone()).append('\n');
+        }
+        if (v.getClienteEndereco() != null
+                && !v.getClienteEndereco().isBlank()) {
+            sb.append("Endereco: ")
+                    .append(v.getClienteEndereco()).append('\n');
+        }
         sb.append("Pagamento: ")
                 .append(v.getFormaPagamento().getRotulo()).append("\n\n");
         for (ItemVenda item : v.getItens()) {
@@ -116,6 +129,8 @@ public class PainelVendas extends JPanel {
         }
         sb.append("\nSubtotal: ").append(Moeda.formatar(v.getSubtotal()));
         sb.append("\nDesconto: ").append(Moeda.formatar(v.getDesconto()));
+        sb.append("\nTaxa entrega: ")
+                .append(Moeda.formatar(v.getTaxaEntrega()));
         sb.append("\nTotal: ").append(Moeda.formatar(v.getTotal()));
 
         JOptionPane.showMessageDialog(this, sb.toString(),

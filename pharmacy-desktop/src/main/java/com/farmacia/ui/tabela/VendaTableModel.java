@@ -17,7 +17,7 @@ public class VendaTableModel extends AbstractTableModel {
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private static final String[] COLUNAS = {
-            "Venda", "Data / Hora", "Itens", "Pagamento", "Total"
+            "Pedido", "Data / Hora", "Cliente", "Itens", "Pagamento", "Total"
     };
 
     private List<Venda> itens = new ArrayList<>();
@@ -53,9 +53,12 @@ public class VendaTableModel extends AbstractTableModel {
             case 0 -> "#" + v.getId();
             case 1 -> v.getDataHora() == null
                     ? "-" : v.getDataHora().format(DATA_HORA);
-            case 2 -> v.getQuantidadeTotalItens();
-            case 3 -> v.getFormaPagamento().getRotulo();
-            case 4 -> Moeda.formatar(v.getTotal());
+            case 2 -> v.getClienteNome() == null
+                    || v.getClienteNome().isBlank()
+                    ? "-" : v.getClienteNome();
+            case 3 -> v.getQuantidadeTotalItens();
+            case 4 -> v.getFormaPagamento().getRotulo();
+            case 5 -> Moeda.formatar(v.getTotal());
             default -> "";
         };
     }

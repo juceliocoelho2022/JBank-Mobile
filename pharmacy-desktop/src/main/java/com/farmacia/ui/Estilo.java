@@ -5,6 +5,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -25,6 +26,7 @@ public final class Estilo {
     public static final Color CINZA_CLARO = new Color(222, 226, 224);
     public static final Color VERMELHO = new Color(214, 69, 65);
     public static final Color AMBAR = new Color(201, 148, 0);
+    public static final Color LARANJA = new Color(226, 110, 30);
 
     public static final Font FONTE_TITULO =
             new Font("SansSerif", Font.BOLD, 20);
@@ -82,6 +84,27 @@ public final class Estilo {
     /** Borda com preenchimento interno padrao para paineis. */
     public static Border espacamento(int px) {
         return BorderFactory.createEmptyBorder(px, px, px, px);
+    }
+
+    /**
+     * Borda de secao com titulo em laranja e negrito, no estilo de um
+     * "quadro" agrupando campos (ex.: "Dados do Cliente").
+     */
+    public static TitledBorder secao(String titulo) {
+        TitledBorder borda = BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(CINZA_CLARO, 1, true),
+                "  " + titulo + "  ");
+        borda.setTitleColor(LARANJA);
+        borda.setTitleFont(FONTE_SUBTITULO);
+        return borda;
+    }
+
+    /** Rotulo de formulario padronizado. */
+    public static JLabel rotulo(String texto) {
+        JLabel l = new JLabel(texto);
+        l.setFont(FONTE_NORMAL);
+        l.setForeground(TEXTO);
+        return l;
     }
 
     /** Aplica fundo branco e borda arredondada suave a um componente. */

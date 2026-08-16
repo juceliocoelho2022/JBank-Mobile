@@ -8,23 +8,30 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Uma venda concluida no PDV, com seus itens, forma de pagamento e desconto.
+ * Um pedido/venda, com dados do cliente, itens, forma de pagamento,
+ * desconto e taxa de entrega.
  */
 public class Venda implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private long id;
     private LocalDateTime dataHora;
     private final List<ItemVenda> itens;
     private FormaPagamento formaPagamento;
     private BigDecimal desconto;
+    private BigDecimal taxaEntrega;
+
+    private String clienteNome;
+    private String clienteTelefone;
+    private String clienteEndereco;
 
     public Venda() {
         this.dataHora = LocalDateTime.now();
         this.itens = new ArrayList<>();
         this.formaPagamento = FormaPagamento.DINHEIRO;
         this.desconto = BigDecimal.ZERO;
+        this.taxaEntrega = BigDecimal.ZERO;
     }
 
     public void adicionarItem(ItemVenda item) {
@@ -40,11 +47,17 @@ public class Venda implements Serializable {
         return soma;
     }
 
-    /** Valor final da venda: subtotal menos o desconto (nunca negativo). */
+    /**
+     * Valor final do pedido: subtotal menos o desconto (nunca negativo),
+     * somado a taxa de entrega.
+     */
     public BigDecimal getTotal() {
-        BigDecimal total = getSubtotal().subtract(
-                desconto == null ? BigDecimal.ZERO : desconto);
-        return total.max(BigDecimal.ZERO);
+        BigDecimal base = getSubtotal()
+                .subtract(desconto == null ? BigDecimal.ZERO : desconto)
+                .max(BigDecimal.ZERO);
+        BigDecimal taxa = taxaEntrega == null
+                ? BigDecimal.ZERO : taxaEntrega;
+        return base.add(taxa);
     }
 
     /** Quantidade total de unidades vendidas nesta venda. */
@@ -90,5 +103,37 @@ public class Venda implements Serializable {
 
     public void setDesconto(BigDecimal desconto) {
         this.desconto = desconto;
+    }
+
+    public BigDecimal getTaxaEntrega() {
+        return taxaEntrega == null ? BigDecimal.ZERO : taxaEntrega;
+    }
+
+    public void setTaxaEntrega(BigDecimal taxaEntrega) {
+        this.taxaEntrega = taxaEntrega;
+    }
+
+    public String getClienteNome() {
+        return clienteNome;
+    }
+
+    public void setClienteNome(String clienteNome) {
+        this.clienteNome = clienteNome;
+    }
+
+    public String getClienteTelefone() {
+        return clienteTelefone;
+    }
+
+    public void setClienteTelefone(String clienteTelefone) {
+        this.clienteTelefone = clienteTelefone;
+    }
+
+    public String getClienteEndereco() {
+        return clienteEndereco;
+    }
+
+    public void setClienteEndereco(String clienteEndereco) {
+        this.clienteEndereco = clienteEndereco;
     }
 }

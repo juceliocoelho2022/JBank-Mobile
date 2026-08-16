@@ -14,6 +14,7 @@ import java.awt.Dimension;
  */
 public class JanelaPrincipal extends JFrame {
 
+    private final PainelPedidos painelPedidos;
     private final PainelDashboard painelDashboard;
     private final PainelEstoque painelEstoque;
     private final PainelVendas painelVendas;
@@ -28,8 +29,8 @@ public class JanelaPrincipal extends JFrame {
         this.painelVendas =
                 new PainelVendas(contexto.getVendaService());
 
-        // Ao concluir uma venda, atualiza dashboard, estoque e historico.
-        PainelPdv painelPdv = new PainelPdv(
+        // Ao salvar um pedido, atualiza dashboard, estoque e financas.
+        this.painelPedidos = new PainelPedidos(
                 contexto.getEstoqueService(),
                 contexto.getVendaService(),
                 this::atualizarTudo);
@@ -37,10 +38,10 @@ public class JanelaPrincipal extends JFrame {
         JTabbedPane abas = new JTabbedPane();
         abas.setFont(Estilo.FONTE_SUBTITULO);
         abas.setBackground(Estilo.FUNDO);
-        abas.addTab("  Inicio  ", painelDashboard);
-        abas.addTab("  PDV  ", painelPdv);
-        abas.addTab("  Estoque  ", painelEstoque);
-        abas.addTab("  Vendas  ", painelVendas);
+        abas.addTab("  Pedidos  ", painelPedidos);
+        abas.addTab("  Admin  ", painelEstoque);
+        abas.addTab("  Financas  ", painelVendas);
+        abas.addTab("  Dashboard  ", painelDashboard);
         abas.setBorder(BorderFactory.createEmptyBorder());
 
         // Reforca a atualizacao ao navegar entre as abas.
@@ -49,11 +50,12 @@ public class JanelaPrincipal extends JFrame {
         setContentPane(abas);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(1024, 640));
-        setSize(1100, 700);
+        setSize(1120, 720);
         setLocationRelativeTo(null);
     }
 
     private void atualizarTudo() {
+        painelPedidos.recarregarProdutos();
         painelDashboard.recarregar();
         painelEstoque.recarregar();
         painelVendas.recarregar();
@@ -64,11 +66,13 @@ public class JanelaPrincipal extends JFrame {
         try {
             UIManager.setLookAndFeel(
                     "javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            UIManager.put("control", Estilo.FUNDO);
-            UIManager.put("nimbusBase", Estilo.VERDE_ESCURO);
-            UIManager.put("nimbusFocus", Estilo.VERDE);
+            // Apenas a cor de selecao (tabelas/listas) recebe o verde do tema.
+            // Evitamos mexer no "nimbusBase" para nao tingir as abas e barras.
             UIManager.put("nimbusSelectionBackground", Estilo.VERDE);
+            UIManager.put("nimbusFocus", Estilo.VERDE);
             UIManager.put("Table.alternateRowColor", Estilo.VERDE_CLARO);
+            UIManager.getLookAndFeelDefaults()
+                    .put("TabbedPane.font", Estilo.FONTE_SUBTITULO);
         } catch (Exception e) {
             // Se o Nimbus nao estiver disponivel, mantem o tema padrao.
         }
