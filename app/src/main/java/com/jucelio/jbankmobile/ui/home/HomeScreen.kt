@@ -565,7 +565,7 @@ private fun DeliveryBanner(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "Modo Entregador",
+                        text = "RotaCerta",
                         color = Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold

@@ -101,7 +101,7 @@ fun DeliveryRouteScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Rota de entregas",
+                        text = "RotaCerta",
                         color = WhiteText,
                         fontWeight = FontWeight.Bold
                     )
