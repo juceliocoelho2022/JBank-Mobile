@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material.icons.filled.DeliveryDining
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalAtm
 import androidx.compose.material.icons.filled.Notifications
@@ -104,7 +105,8 @@ fun HomeScreen(
     onDepositClick: () -> Unit,
     onWithdrawClick: () -> Unit,
     onInvestmentsClick: () -> Unit = {},
-    onQrCodeClick: () -> Unit = {}
+    onQrCodeClick: () -> Unit = {},
+    onDeliveriesClick: () -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -192,6 +194,12 @@ fun HomeScreen(
                             onInvestmentsClick = onInvestmentsClick,
                             onAccountsClick = onAccountsClick,
                             onCardsClick = onCardsClick
+                        )
+                    }
+
+                    item {
+                        DeliveryBanner(
+                            onClick = onDeliveriesClick
                         )
                     }
 
@@ -516,6 +524,115 @@ private fun RowScope.QuickAction(
             textAlign = TextAlign.Center,
             maxLines = 1
         )
+    }
+}
+
+@Composable
+private fun DeliveryBanner(
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            Color(0xFF0B3D2E),
+                            Color(0xFF0E7A4B),
+                            Color(0xFF0B3D2E)
+                        )
+                    )
+                )
+                .padding(18.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Modo Entregador",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(7.dp)
+                    )
+
+                    Text(
+                        text = "Leia o endereço por QR Code ou código de barras " +
+                            "e monte sua rota de entregas.",
+                        color = Color.White.copy(
+                            alpha = 0.82f
+                        ),
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(13.dp)
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .clip(
+                                RoundedCornerShape(18.dp)
+                            )
+                            .background(
+                                Color.White.copy(
+                                    alpha = 0.18f
+                                )
+                            )
+                            .padding(
+                                horizontal = 15.dp,
+                                vertical = 8.dp
+                            )
+                    ) {
+                        Text(
+                            text = "Abrir rota",
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .size(95.dp)
+                        .clip(
+                            RoundedCornerShape(24.dp)
+                        )
+                        .background(
+                            Color.White.copy(alpha = 0.14f)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DeliveryDining,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(61.dp)
+                    )
+                }
+            }
+        }
     }
 }
 

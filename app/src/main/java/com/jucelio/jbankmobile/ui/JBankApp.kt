@@ -28,6 +28,9 @@ import androidx.navigation.compose.rememberNavController
 import com.jucelio.jbankmobile.ui.account.AccountScreen
 import com.jucelio.jbankmobile.ui.account.AccountViewModel
 import com.jucelio.jbankmobile.ui.dashboard.DashboardViewModel
+import com.jucelio.jbankmobile.ui.delivery.DeliveryRouteScreen
+import com.jucelio.jbankmobile.ui.delivery.DeliveryScannerScreen
+import com.jucelio.jbankmobile.ui.delivery.DeliveryViewModel
 import com.jucelio.jbankmobile.ui.home.HomeScreen
 import com.jucelio.jbankmobile.ui.login.LoginScreen
 import com.jucelio.jbankmobile.ui.login.LoginViewModel
@@ -43,6 +46,7 @@ import com.jucelio.jbankmobile.ui.transaction.TransactionScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -65,6 +69,9 @@ private object Routes {
     const val PIX_SEND = "pix_send"
     const val PIX_SCANNER = "pix_scanner"
     const val PIX_CONFIRM = "pix_confirm"
+
+    const val DELIVERY = "delivery"
+    const val DELIVERY_SCANNER = "delivery_scanner"
 }
 
 @Composable
@@ -240,6 +247,12 @@ fun JBankApp() {
 
                 onQrCodeClick = {
                     navController.navigate(Routes.PIX_SCANNER) {
+                        launchSingleTop = true
+                    }
+                },
+
+                onDeliveriesClick = {
+                    navController.navigate(Routes.DELIVERY) {
                         launchSingleTop = true
                     }
                 }
@@ -557,6 +570,89 @@ fun JBankApp() {
                     println(
                         "Continuar com QR Code: $qrCodeValue"
                     )
+                }
+            )
+        }
+
+        /*
+         * ============================================================
+         * ROTA DE ENTREGAS (iFood / Encomendas)
+         * ============================================================
+         */
+
+        composable(Routes.DELIVERY) { entry ->
+            val deliveryViewModel: DeliveryViewModel =
+                hiltViewModel()
+
+            val scannedCode by entry
+                .savedStateHandle
+                .getStateFlow<String?>(
+                    key = "scannedDeliveryCode",
+                    initialValue = null
+                )
+                .collectAsState()
+
+            LaunchedEffect(scannedCode) {
+                scannedCode?.let { code ->
+                    deliveryViewModel.addFromScannedCode(code)
+
+                    entry.savedStateHandle[
+                        "scannedDeliveryCode"
+                    ] = null
+                }
+            }
+
+            DeliveryRouteScreen(
+                state = deliveryViewModel.state,
+
+                onBack = {
+                    navController.popBackStack()
+                },
+
+                onScanClick = {
+                    navController.navigate(Routes.DELIVERY_SCANNER) {
+                        launchSingleTop = true
+                    }
+                },
+
+                onReorder = deliveryViewModel::reorderRoute,
+
+                onClear = deliveryViewModel::clearRoute,
+
+                onMarkDelivered = deliveryViewModel::markAsDelivered,
+
+                onMarkFailed = deliveryViewModel::markAsFailed,
+
+                onReopen = deliveryViewModel::reopen,
+
+                onRemove = deliveryViewModel::removeStop,
+
+                onMessageShown = deliveryViewModel::consumeMessage
+            )
+        }
+
+        /*
+         * ============================================================
+         * SCANNER DE ENDEREÇO DA ENTREGA
+         * ============================================================
+         */
+
+        composable(Routes.DELIVERY_SCANNER) {
+            DeliveryScannerScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+
+                onCodeRead = { code ->
+                    navController
+                        .previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(
+                            key = "scannedDeliveryCode",
+                            value = code
+                        )
+
+                    navController.popBackStack()
                 }
             )
         }
