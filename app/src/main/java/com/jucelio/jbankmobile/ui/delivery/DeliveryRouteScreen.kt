@@ -1,7 +1,5 @@
 package com.jucelio.jbankmobile.ui.delivery
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -59,14 +57,16 @@ import com.jucelio.jbankmobile.domain.model.delivery.Delivery
 import com.jucelio.jbankmobile.domain.model.delivery.DeliveryStatus
 import com.jucelio.jbankmobile.domain.model.delivery.DeliveryType
 
-private val Background = Color(0xFF060712)
-private val Surface = Color(0xFF12132A)
-private val Accent = Color(0xFFB45CFF)
-private val Green = Color(0xFF00C96B)
-private val Red = Color(0xFFFF5A5F)
-private val IFoodRed = Color(0xFFEA1D2C)
-private val WhiteText = Color(0xFFF4F3F8)
-private val SecondaryText = Color(0xFFB6B1C2)
+// Paleta RotaCerta (grafite neutro + verde de acento).
+private val Background = RotaColors.Background
+private val Surface = RotaColors.Surface
+private val Accent = RotaColors.Accent
+private val Green = RotaColors.Accent
+private val Red = RotaColors.Danger
+private val IFoodRed = RotaColors.IFood
+private val WhiteText = RotaColors.White
+private val SecondaryText = RotaColors.Secondary
+private val OnAccent = RotaColors.OnAccent
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
@@ -135,7 +135,7 @@ fun DeliveryRouteScreen(
             ExtendedFloatingActionButton(
                 onClick = onScanClick,
                 containerColor = Accent,
-                contentColor = Color.White,
+                contentColor = OnAccent,
                 icon = {
                     Icon(
                         imageVector = Icons.Default.QrCodeScanner,
@@ -462,7 +462,8 @@ private fun StopActions(
                 onClick = onMarkDelivered,
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Green
+                    containerColor = Green,
+                    contentColor = OnAccent
                 )
             ) {
                 Icon(
@@ -595,7 +596,8 @@ private fun EmptyState(
                 .fillMaxWidth()
                 .height(54.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Accent
+                containerColor = Accent,
+                contentColor = OnAccent
             )
         ) {
             Icon(
@@ -605,30 +607,5 @@ private fun EmptyState(
             Spacer(modifier = Modifier.size(8.dp))
             Text("Ler primeiro endereço")
         }
-    }
-}
-
-/**
- * Abre o endereço da entrega no aplicativo de mapas do dispositivo.
- */
-private fun openInMaps(
-    context: android.content.Context,
-    delivery: Delivery
-) {
-    val query = Uri.encode(delivery.fullAddress)
-    val intent = Intent(
-        Intent.ACTION_VIEW,
-        Uri.parse("geo:0,0?q=$query")
-    )
-
-    val fallback = Intent(
-        Intent.ACTION_VIEW,
-        Uri.parse("https://www.google.com/maps/search/?api=1&query=$query")
-    )
-
-    runCatching {
-        context.startActivity(intent)
-    }.onFailure {
-        runCatching { context.startActivity(fallback) }
     }
 }

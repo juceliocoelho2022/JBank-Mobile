@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 data class DeliveryUiState(
     val deliveries: List<Delivery> = emptyList(),
+    val isOnline: Boolean = true,
     val infoMessage: String? = null
 ) {
     val totalStops: Int
@@ -24,8 +25,23 @@ data class DeliveryUiState(
     val deliveredStops: Int
         get() = deliveries.count { it.status == DeliveryStatus.DELIVERED }
 
+    val failedStops: Int
+        get() = deliveries.count { it.status == DeliveryStatus.FAILED }
+
     val nextStop: Delivery?
         get() = deliveries.firstOrNull { !it.isConcluded }
+
+    /** Entregas já finalizadas (entregues ou não), para o histórico. */
+    val history: List<Delivery>
+        get() = deliveries.filter { it.isConcluded }
+
+    /** Progresso da rota (0f..1f) considerando as paradas concluídas. */
+    val progress: Float
+        get() = if (totalStops == 0) {
+            0f
+        } else {
+            (totalStops - pendingStops).toFloat() / totalStops
+        }
 }
 
 /**
@@ -113,7 +129,15 @@ class DeliveryViewModel @Inject constructor(
     }
 
     fun clearRoute() {
-        state = DeliveryUiState()
+        state = state.copy(
+            deliveries = emptyList(),
+            infoMessage = null
+        )
+    }
+
+    /** Alterna a disponibilidade do entregador (online/offline). */
+    fun toggleOnline() {
+        state = state.copy(isOnline = !state.isOnline)
     }
 
     fun consumeMessage() {

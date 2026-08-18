@@ -21,13 +21,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.jucelio.jbankmobile.ui.account.AccountScreen
 import com.jucelio.jbankmobile.ui.account.AccountViewModel
 import com.jucelio.jbankmobile.ui.dashboard.DashboardViewModel
+import com.jucelio.jbankmobile.ui.delivery.DeliveryHistoryScreen
+import com.jucelio.jbankmobile.ui.delivery.DeliveryHomeScreen
 import com.jucelio.jbankmobile.ui.delivery.DeliveryRouteScreen
 import com.jucelio.jbankmobile.ui.delivery.DeliveryScannerScreen
 import com.jucelio.jbankmobile.ui.delivery.DeliveryViewModel
@@ -46,9 +50,9 @@ import com.jucelio.jbankmobile.ui.transaction.TransactionScreen
 import com.jucelio.jbankmobile.ui.transaction.TransactionViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.jucelio.jbankmobile.ui.startup.StartupDestination
@@ -70,7 +74,11 @@ private object Routes {
     const val PIX_SCANNER = "pix_scanner"
     const val PIX_CONFIRM = "pix_confirm"
 
-    const val DELIVERY = "delivery"
+    // Modo entregador (RotaCerta) — grafo próprio com ViewModel compartilhado.
+    const val DELIVERY_GRAPH = "delivery_graph"
+    const val DELIVERY_HOME = "delivery_home"
+    const val DELIVERY_ROUTE = "delivery_route"
+    const val DELIVERY_HISTORY = "delivery_history"
     const val DELIVERY_SCANNER = "delivery_scanner"
 }
 
@@ -252,7 +260,7 @@ fun JBankApp() {
                 },
 
                 onDeliveriesClick = {
-                    navController.navigate(Routes.DELIVERY) {
+                    navController.navigate(Routes.DELIVERY_GRAPH) {
                         launchSingleTop = true
                     }
                 }
@@ -580,81 +588,119 @@ fun JBankApp() {
          * ============================================================
          */
 
-        composable(Routes.DELIVERY) { entry ->
-            val deliveryViewModel: DeliveryViewModel =
-                hiltViewModel()
+        navigation(
+            route = Routes.DELIVERY_GRAPH,
+            startDestination = Routes.DELIVERY_HOME
+        ) {
 
-            val scannedCode by entry
-                .savedStateHandle
-                .getStateFlow<String?>(
-                    key = "scannedDeliveryCode",
-                    initialValue = null
+            /*
+             * INÍCIO DO ENTREGADOR
+             */
+            composable(Routes.DELIVERY_HOME) { backStackEntry ->
+                val deliveryViewModel =
+                    sharedDeliveryViewModel(navController, backStackEntry)
+
+                DeliveryHomeScreen(
+                    state = deliveryViewModel.state,
+
+                    onToggleOnline = deliveryViewModel::toggleOnline,
+
+                    onScanClick = {
+                        navController.navigate(Routes.DELIVERY_SCANNER) {
+                            launchSingleTop = true
+                        }
+                    },
+
+                    onRouteClick = {
+                        navController.navigate(Routes.DELIVERY_ROUTE) {
+                            launchSingleTop = true
+                        }
+                    },
+
+                    onHistoryClick = {
+                        navController.navigate(Routes.DELIVERY_HISTORY) {
+                            launchSingleTop = true
+                        }
+                    },
+
+                    onProfileClick = {
+                        navigateToMainRoute(
+                            navController = navController,
+                            route = Routes.PROFILE
+                        )
+                    }
                 )
-                .collectAsState()
-
-            LaunchedEffect(scannedCode) {
-                scannedCode?.let { code ->
-                    deliveryViewModel.addFromScannedCode(code)
-
-                    entry.savedStateHandle[
-                        "scannedDeliveryCode"
-                    ] = null
-                }
             }
 
-            DeliveryRouteScreen(
-                state = deliveryViewModel.state,
+            /*
+             * ROTA DE ENTREGAS (iFood / Encomendas)
+             */
+            composable(Routes.DELIVERY_ROUTE) { backStackEntry ->
+                val deliveryViewModel =
+                    sharedDeliveryViewModel(navController, backStackEntry)
 
-                onBack = {
-                    navController.popBackStack()
-                },
+                DeliveryRouteScreen(
+                    state = deliveryViewModel.state,
+                    onBack = { navController.popBackStack() },
+                    onScanClick = {
+                        navController.navigate(Routes.DELIVERY_SCANNER) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onReorder = deliveryViewModel::reorderRoute,
+                    onClear = deliveryViewModel::clearRoute,
+                    onMarkDelivered = deliveryViewModel::markAsDelivered,
+                    onMarkFailed = deliveryViewModel::markAsFailed,
+                    onReopen = deliveryViewModel::reopen,
+                    onRemove = deliveryViewModel::removeStop,
+                    onMessageShown = deliveryViewModel::consumeMessage
+                )
+            }
 
-                onScanClick = {
-                    navController.navigate(Routes.DELIVERY_SCANNER) {
-                        launchSingleTop = true
-                    }
-                },
+            /*
+             * HISTÓRICO
+             */
+            composable(Routes.DELIVERY_HISTORY) { backStackEntry ->
+                val deliveryViewModel =
+                    sharedDeliveryViewModel(navController, backStackEntry)
 
-                onReorder = deliveryViewModel::reorderRoute,
-
-                onClear = deliveryViewModel::clearRoute,
-
-                onMarkDelivered = deliveryViewModel::markAsDelivered,
-
-                onMarkFailed = deliveryViewModel::markAsFailed,
-
-                onReopen = deliveryViewModel::reopen,
-
-                onRemove = deliveryViewModel::removeStop,
-
-                onMessageShown = deliveryViewModel::consumeMessage
-            )
-        }
-
-        /*
-         * ============================================================
-         * SCANNER DE ENDEREÇO DA ENTREGA
-         * ============================================================
-         */
-
-        composable(Routes.DELIVERY_SCANNER) {
-            DeliveryScannerScreen(
-                onBack = {
-                    navController.popBackStack()
-                },
-
-                onCodeRead = { code ->
-                    navController
-                        .previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            key = "scannedDeliveryCode",
-                            value = code
+                DeliveryHistoryScreen(
+                    state = deliveryViewModel.state,
+                    onScanClick = {
+                        navController.navigate(Routes.DELIVERY_SCANNER) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onHomeClick = { navController.popBackStack(Routes.DELIVERY_HOME, false) },
+                    onRouteClick = {
+                        navController.navigate(Routes.DELIVERY_ROUTE) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onProfileClick = {
+                        navigateToMainRoute(
+                            navController = navController,
+                            route = Routes.PROFILE
                         )
+                    }
+                )
+            }
 
-                    navController.popBackStack()
-                }
-            )
+            /*
+             * SCANNER DE ENDEREÇO — adiciona à rota via ViewModel compartilhado
+             */
+            composable(Routes.DELIVERY_SCANNER) { backStackEntry ->
+                val deliveryViewModel =
+                    sharedDeliveryViewModel(navController, backStackEntry)
+
+                DeliveryScannerScreen(
+                    onBack = { navController.popBackStack() },
+                    onCodeRead = { code ->
+                        deliveryViewModel.addFromScannedCode(code)
+                        navController.popBackStack()
+                    }
+                )
+            }
         }
 
         /*
@@ -898,6 +944,22 @@ private fun InvestmentsPlaceholderScreen(
  * FUNÇÕES AUXILIARES DE NAVEGAÇÃO
  * ================================================================
  */
+
+/**
+ * Resolve o [DeliveryViewModel] compartilhado por todas as telas do
+ * modo entregador, escopo do grafo [Routes.DELIVERY_GRAPH]. Assim
+ * Início, Rota, Histórico e Scanner enxergam a mesma rota em memória.
+ */
+@Composable
+private fun sharedDeliveryViewModel(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry
+): DeliveryViewModel {
+    val graphEntry = remember(backStackEntry) {
+        navController.getBackStackEntry(Routes.DELIVERY_GRAPH)
+    }
+    return hiltViewModel(graphEntry)
+}
 
 private fun navigateToMainRoute(
     navController: NavHostController,

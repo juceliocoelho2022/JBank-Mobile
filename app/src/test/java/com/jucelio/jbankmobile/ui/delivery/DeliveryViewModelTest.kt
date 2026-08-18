@@ -116,4 +116,40 @@ class DeliveryViewModelTest {
         assertEquals(0, viewModel.state.totalStops)
         assertNull(viewModel.state.infoMessage)
     }
+
+    @Test
+    fun `deve alternar disponibilidade online`() {
+        assertTrue(viewModel.state.isOnline)
+
+        viewModel.toggleOnline()
+        assertEquals(false, viewModel.state.isOnline)
+
+        viewModel.toggleOnline()
+        assertTrue(viewModel.state.isOnline)
+    }
+
+    @Test
+    fun `historico deve conter apenas entregas concluidas`() {
+        viewModel.addFromScannedCode("Endereço: Rua A\nCEP: 59000-000")
+        viewModel.addFromScannedCode("Endereço: Rua B\nCEP: 59000-000")
+
+        val firstId = viewModel.state.deliveries.first().id
+        viewModel.markAsDelivered(firstId)
+
+        assertEquals(1, viewModel.state.history.size)
+        assertEquals(firstId, viewModel.state.history.first().id)
+    }
+
+    @Test
+    fun `progresso deve refletir paradas concluidas`() {
+        viewModel.addFromScannedCode("Endereço: Rua A\nCEP: 59000-000")
+        viewModel.addFromScannedCode("Endereço: Rua B\nCEP: 59000-000")
+
+        assertEquals(0f, viewModel.state.progress)
+
+        val firstId = viewModel.state.nextStop!!.id
+        viewModel.markAsDelivered(firstId)
+
+        assertEquals(0.5f, viewModel.state.progress)
+    }
 }

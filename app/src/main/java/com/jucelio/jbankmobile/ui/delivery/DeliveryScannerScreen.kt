@@ -55,8 +55,8 @@ import com.jucelio.jbankmobile.ui.pix.QrCodeAnalyzer
 import com.jucelio.jbankmobile.ui.pix.QrScannerOverlay
 import java.util.concurrent.Executors
 
-private val ScannerDark = Color(0xFF060712)
-private val ScannerAccent = Color(0xFFB45CFF)
+private val ScannerDark = RotaColors.Background
+private val ScannerAccent = RotaColors.Accent
 
 /**
  * Tela de leitura do endereço do cliente para a rota de entrega.
@@ -456,7 +456,8 @@ private fun PermissionDeniedContent(
                 .fillMaxWidth()
                 .height(54.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = ScannerAccent
+                containerColor = ScannerAccent,
+                contentColor = RotaColors.OnAccent
             )
         ) {
             Text("Permitir câmera")
