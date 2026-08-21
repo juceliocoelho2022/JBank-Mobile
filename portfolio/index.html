@@ -284,7 +284,11 @@
   .narr-launch{pointer-events:auto;display:inline-flex;align-items:center;gap:10px;background:var(--green);color:#fff;border:none;border-radius:999px;padding:13px 20px;font-family:Inter,sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;box-shadow:0 12px 28px -10px rgba(31,166,55,.7);transition:transform .12s,box-shadow .2s}
   .narr-launch:hover{transform:translateY(-2px)}
   .narr-launch svg{width:20px;height:20px;fill:currentColor;stroke:none}
-  .narr-warn{font-size:.74rem;color:var(--muted);text-align:center}
+  .narr-voice{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .narr-voice label{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-soft);font-weight:700}
+  .narr-voice select{flex:1;min-width:140px;max-width:100%;background:var(--card-tint);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer}
+  .narr-warn{font-size:.74rem;color:var(--muted);line-height:1.45}
+  .narr-warn b{color:var(--ink)}
   @media (max-width:560px){
     .narr{padding:10px}
     .narr-inner{border-radius:16px}
@@ -586,7 +590,11 @@
         <button id="narrClose" aria-label="Fechar narração" title="Fechar"><svg viewBox="0 0 24 24"><path d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4 5.7 18.3 4.3 16.9 10.6 12 4.3 5.7l1.4-1.4L10.6 10.6l6.3-6.3z"/></svg></button>
       </div>
     </div>
-    <p class="narr-warn" id="narrWarn" style="display:none">Seu navegador não tem voz em português instalada — a leitura pode sair com sotaque. O texto aparece aqui na legenda.</p>
+    <div class="narr-voice" id="narrVoiceWrap" style="display:none">
+      <label for="narrVoice">Voz</label>
+      <select id="narrVoice" aria-label="Escolher a voz da narração"></select>
+    </div>
+    <p class="narr-warn" id="narrWarn" style="display:none"></p>
   </div>
 </div>
 
@@ -603,6 +611,8 @@
     var stepEl=document.getElementById('narrStep');
     var progEl=document.getElementById('narrProg');
     var warnEl=document.getElementById('narrWarn');
+    var voiceSel=document.getElementById('narrVoice');
+    var voiceWrap=document.getElementById('narrVoiceWrap');
 
     var ICON_PLAY='M8 5v14l11-7z';
     var ICON_PAUSE='M6 5h4v14H6zM14 5h4v14h-4z';
@@ -622,16 +632,55 @@
       {t:"Seu futuro começa aqui. Escolha Desenvolvimento de Sistemas. Visite nosso espaço, converse com os estudantes e teste os projetos. Te esperamos na Jornada dos Técnicos!",go:"s-cta"}
     ];
 
-    var idx=0, started=false, ptVoice=null;
+    var idx=0, started=false, ptVoice=null, voicesReady=false;
 
-    function pickVoice(){
-      var vs=synth.getVoices()||[];
-      ptVoice = vs.find(function(v){return /pt[-_]BR/i.test(v.lang)})
-             || vs.find(function(v){return /^pt/i.test(v.lang)}) || null;
-      warnEl.style.display = ptVoice ? 'none' : 'block';
+    // Quanto mais natural a voz, maior a nota. Vozes neurais/"natural"/Google
+    // soam muito melhor que as vozes robóticas antigas (ex.: Microsoft Maria).
+    function score(v){
+      var n=(v.name||'').toLowerCase(), s=0;
+      if(/pt[-_]br/i.test(v.lang)) s+=100; else if(/^pt/i.test(v.lang)) s+=40;
+      if(/google/.test(n)) s+=60;                 // Google pt-BR (Chrome) — bem natural
+      if(/natural|neural|online/.test(n)) s+=55;  // vozes neurais (Edge/Windows 11)
+      if(/francisca|thalita|antonio|brenda|donato|elza|fabio|giovanna|humberto|julio|leila|leticia|manuela|nicolau|valerio|yara/.test(n)) s+=45; // vozes Azure/Edge pt-BR
+      if(/luciana/.test(n)) s+=30;                // macOS/iOS pt-BR
+      if(/enhanced|premium|siri/.test(n)) s+=25;
+      if(/maria|daniel|helo[ií]sa|raquel/.test(n) && !/natural|online|enhanced|premium/.test(n)) s-=15; // SAPI antigas, robóticas
+      if(v.localService) s+=4;                     // desempate: local funciona offline
+      return s;
     }
-    pickVoice();
-    if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=pickVoice;
+
+    function buildVoiceList(){
+      var vs=(synth.getVoices()||[]).filter(function(v){return /^pt/i.test(v.lang)});
+      vs.sort(function(a,b){return score(b)-score(a)});
+      voiceSel.innerHTML='';
+      if(!vs.length){
+        voiceWrap.style.display='none'; ptVoice=null;
+        warnEl.style.display='block';
+        warnEl.innerHTML='Este aparelho não tem voz em português instalada — a leitura pode sair com sotaque. <b>Dica:</b> abra no <b>Microsoft Edge</b> ou <b>Chrome</b> para ouvir uma voz bem mais natural. O texto sempre aparece na legenda.';
+        return;
+      }
+      vs.forEach(function(v,i){
+        var o=document.createElement('option');
+        o.value=v.name; o.textContent=v.name.replace(/microsoft |google /i,'').replace(/\(.*?\)/,'').trim()+(i===0?' — recomendada':'');
+        voiceSel.appendChild(o);
+      });
+      ptVoice=vs[0];
+      voiceSel.value=ptVoice.name;
+      voiceWrap.style.display='flex';
+      warnEl.style.display='block';
+      warnEl.innerHTML='Não gostou da voz? Troque acima. <b>Dica:</b> o <b>Microsoft Edge</b> costuma ter as vozes mais naturais.';
+    }
+
+    function refreshVoices(){ if(voicesReady) return; var vs=synth.getVoices(); if(vs&&vs.length){voicesReady=true; buildVoiceList();} }
+    refreshVoices();
+    if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=function(){voicesReady=false; refreshVoices();};
+    setTimeout(refreshVoices,300);
+
+    voiceSel.addEventListener('change',function(){
+      var vs=synth.getVoices()||[];
+      ptVoice=vs.find(function(v){return v.name===voiceSel.value})||ptVoice;
+      if(panel.classList.contains('playing')){ synth.cancel(); speak(idx); } // pré-escuta na hora
+    });
 
     function setIcon(playing){ playIcon.setAttribute('d', playing?ICON_PAUSE:ICON_PLAY); }
     function progress(){ progEl.style.width = Math.round((idx)/script.length*100)+'%'; }
@@ -647,7 +696,7 @@
       var target=document.getElementById(seg.go);
       if(target) target.scrollIntoView({behavior:'smooth',block: seg.go==='s-hero'?'start':'center'});
       var u=new SpeechSynthesisUtterance(seg.t);
-      u.lang='pt-BR'; u.rate=1; u.pitch=1;
+      u.lang='pt-BR'; u.rate=0.95; u.pitch=1;
       if(ptVoice) u.voice=ptVoice;
       u.onend=function(){ if(panel.classList.contains('playing')) speak(i+1); };
       synth.cancel();
