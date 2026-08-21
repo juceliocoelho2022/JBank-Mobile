@@ -295,6 +295,61 @@
     .narr-cap{font-size:.9rem}
     .narr-launch{padding:11px 16px;font-size:.88rem}
   }
+
+  /* ---------- ALINHAMENTO PEDAGÓGICO ---------- */
+  .align-grid{grid-template-columns:repeat(2,1fr)}
+  .align-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--shadow-sm)}
+  .align-card .h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .align-card .h .ib{flex:none;width:42px;height:42px;border-radius:11px;background:var(--indigo);color:#fff;display:grid;place-items:center}
+  .align-card .h .ib svg{width:22px;height:22px}
+  .align-card .h h3{font-size:1.1rem;font-weight:700}
+  .align-card .h .tg{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700;display:block;margin-top:2px}
+  .align-card p{color:var(--muted);font-size:.96rem}
+  .comp{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .comp .c{display:inline-flex;align-items:center;gap:7px;background:var(--card-tint);border:1px solid var(--line);border-radius:9px;padding:7px 12px;font-size:.85rem;font-weight:600}
+  .comp .c b{font-family:'JetBrains Mono',monospace;color:var(--green);font-size:.78rem}
+
+  /* ---------- PROJETOS REAIS (editáveis) ---------- */
+  .proj-cards{grid-template-columns:repeat(3,1fr);margin-top:32px}
+  .proj-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:10px}
+  .proj-card .pt{font-family:Archivo;font-weight:800;font-size:1.15rem;line-height:1.1}
+  .proj-card .au{font-size:.86rem;color:var(--muted)}
+  .proj-card .au b{color:var(--ink);font-weight:600}
+  .proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+  .proj-tags span{font-family:'JetBrains Mono',monospace;font-size:.7rem;background:var(--card-tint);border:1px solid var(--line);color:var(--muted);padding:4px 8px;border-radius:7px}
+  .proj-card .pl{margin-top:auto;font-size:.84rem;color:var(--green);font-weight:600;font-family:'JetBrains Mono',monospace;word-break:break-all}
+  .edit-note{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);background:var(--card-tint);border:1px dashed var(--muted-soft);border-radius:9px;padding:9px 13px;margin-top:8px}
+  .edit-note svg{width:16px;height:16px;color:var(--green);flex:none}
+
+  /* ---------- QR ---------- */
+  .qr-block{display:flex;align-items:center;gap:24px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow-sm);margin-top:24px}
+  .qr-frame{flex:none;width:132px;height:132px;background:#fff;border-radius:12px;padding:11px;box-shadow:var(--shadow-sm)}
+  .qr-frame svg{width:100%;height:100%;color:#0D0930;display:block}
+  .qr-block .qh{font-family:Archivo;font-weight:800;font-size:1.15rem;margin-bottom:6px}
+  .qr-block p{color:var(--muted);font-size:.94rem}
+
+  /* ---------- IMPRESSÃO / PDF ---------- */
+  @media print{
+    @page{margin:12mm}
+    html{scroll-behavior:auto}
+    body{font-size:12pt}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .narr,.narr-hint{display:none!important}
+    .grid-lines,.hero::before,.cta::before,.stats-band::before{display:none!important}
+    .hero,.cta,.stats-band{background:var(--indigo-deep)!important}
+    .sec{padding:20px 0!important;break-inside:avoid}
+    .card,.myth,.align-card,.proj-card,.qr-block,.stats-band,.projects,.quiz{break-inside:avoid}
+    .hero-main{padding-bottom:24px!important}
+    a[href]::after{content:""}
+  }
+
+  @media (max-width:880px){
+    .align-grid,.proj-cards{grid-template-columns:1fr 1fr}
+    .qr-block{flex-direction:column;text-align:center}
+  }
+  @media (max-width:560px){
+    .align-grid,.proj-cards{grid-template-columns:1fr}
+  }
 </style>
 
 <header class="hero">
@@ -493,11 +548,51 @@
         <div class="term-bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
         <div class="term-body">
           <span class="c"># feito por estudantes do técnico</span><br>
-          <span class="g">$</span> <span class="u">abrir</span> projeto-dos-estudantes<br>
+          <span class="g">$</span> <span class="u">abrir</span> portfolio-dos-alunos<br>
           <span class="c">→ carregando demonstração...</span><br>
           <span class="g">✓</span> app no ar<br>
           <span class="g">$</span> <span class="cur"></span>
         </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         PROJETOS REAIS DOS ALUNOS  —  EDITE AQUI
+         Troque os campos de cada card pelos projetos da sua turma:
+         .pt  = nome do projeto | .au = alunos e turma
+         .proj-tags = tecnologias | .pl = link (ou apague se não houver)
+         Duplique/apague blocos <article class="proj-card"> conforme precisar.
+    ============================================================= -->
+    <p class="edit-note"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg> Modelo editável — substitua pelos projetos reais da turma antes de apresentar.</p>
+    <div class="grid proj-cards">
+      <article class="proj-card">
+        <div class="pt">Nome do Projeto 1</div>
+        <div class="au"><b>Alunos:</b> Nome, Nome e Nome — Turma 000</div>
+        <div class="proj-tags"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+        <p class="au">Breve descrição: que problema o projeto resolve.</p>
+        <div class="pl">link ou repositório (opcional)</div>
+      </article>
+      <article class="proj-card">
+        <div class="pt">Nome do Projeto 2</div>
+        <div class="au"><b>Alunos:</b> Nome, Nome e Nome — Turma 000</div>
+        <div class="proj-tags"><span>Python</span><span>Banco de Dados</span></div>
+        <p class="au">Breve descrição: que problema o projeto resolve.</p>
+        <div class="pl">link ou repositório (opcional)</div>
+      </article>
+      <article class="proj-card">
+        <div class="pt">Nome do Projeto 3</div>
+        <div class="au"><b>Alunos:</b> Nome, Nome e Nome — Turma 000</div>
+        <div class="proj-tags"><span>App</span><span>Jogo</span></div>
+        <p class="au">Breve descrição: que problema o projeto resolve.</p>
+        <div class="pl">link ou repositório (opcional)</div>
+      </article>
+    </div>
+
+    <div class="qr-block">
+      <div class="qr-frame"><svg viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-label="QR code do portfolio"><path d="M0 0h7v1h-7zM8 0h4v1h-4zM13 0h1v1h-1zM19 0h2v1h-2zM23 0h1v1h-1zM25 0h4v1h-4zM30 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM12 1h1v1h-1zM14 1h1v1h-1zM18 1h2v1h-2zM21 1h1v1h-1zM24 1h3v1h-3zM30 1h1v1h-1zM36 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM9 2h10v1h-10zM21 2h2v1h-2zM24 2h1v1h-1zM26 2h1v1h-1zM30 2h1v1h-1zM32 2h3v1h-3zM36 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM14 3h1v1h-1zM18 3h1v1h-1zM23 3h6v1h-6zM30 3h1v1h-1zM32 3h3v1h-3zM36 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h4v1h-4zM14 4h2v1h-2zM17 4h2v1h-2zM22 4h2v1h-2zM25 4h4v1h-4zM30 4h1v1h-1zM32 4h3v1h-3zM36 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM11 5h1v1h-1zM14 5h4v1h-4zM19 5h1v1h-1zM21 5h2v1h-2zM26 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM28 6h1v1h-1zM30 6h7v1h-7zM8 7h1v1h-1zM12 7h1v1h-1zM14 7h2v1h-2zM20 7h4v1h-4zM0 8h1v1h-1zM4 8h1v1h-1zM6 8h5v1h-5zM12 8h5v1h-5zM19 8h2v1h-2zM26 8h2v1h-2zM29 8h5v1h-5zM36 8h1v1h-1zM0 9h1v1h-1zM2 9h2v1h-2zM5 9h1v1h-1zM7 9h1v1h-1zM10 9h5v1h-5zM18 9h2v1h-2zM23 9h2v1h-2zM27 9h2v1h-2zM32 9h1v1h-1zM35 9h1v1h-1zM1 10h1v1h-1zM5 10h3v1h-3zM9 10h4v1h-4zM15 10h1v1h-1zM17 10h3v1h-3zM21 10h1v1h-1zM23 10h2v1h-2zM27 10h3v1h-3zM31 10h1v1h-1zM33 10h2v1h-2zM1 11h1v1h-1zM3 11h3v1h-3zM7 11h1v1h-1zM9 11h2v1h-2zM12 11h1v1h-1zM14 11h4v1h-4zM19 11h4v1h-4zM26 11h2v1h-2zM30 11h6v1h-6zM3 12h2v1h-2zM6 12h3v1h-3zM11 12h2v1h-2zM14 12h1v1h-1zM17 12h2v1h-2zM21 12h2v1h-2zM24 12h1v1h-1zM26 12h1v1h-1zM29 12h3v1h-3zM34 12h3v1h-3zM0 13h1v1h-1zM2 13h4v1h-4zM7 13h1v1h-1zM9 13h1v1h-1zM12 13h1v1h-1zM14 13h3v1h-3zM20 13h2v1h-2zM23 13h1v1h-1zM26 13h2v1h-2zM32 13h2v1h-2zM35 13h1v1h-1zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h1v1h-1zM15 14h1v1h-1zM17 14h1v1h-1zM20 14h1v1h-1zM23 14h2v1h-2zM27 14h1v1h-1zM29 14h1v1h-1zM31 14h5v1h-5zM0 15h4v1h-4zM5 15h1v1h-1zM7 15h4v1h-4zM12 15h1v1h-1zM15 15h1v1h-1zM17 15h4v1h-4zM22 15h1v1h-1zM24 15h1v1h-1zM26 15h2v1h-2zM29 15h4v1h-4zM34 15h3v1h-3zM0 16h2v1h-2zM4 16h3v1h-3zM8 16h2v1h-2zM11 16h1v1h-1zM15 16h1v1h-1zM18 16h1v1h-1zM22 16h2v1h-2zM26 16h1v1h-1zM30 16h2v1h-2zM33 16h4v1h-4zM0 17h2v1h-2zM4 17h1v1h-1zM7 17h1v1h-1zM9 17h3v1h-3zM16 17h1v1h-1zM19 17h3v1h-3zM23 17h2v1h-2zM27 17h3v1h-3zM31 17h5v1h-5zM3 18h2v1h-2zM6 18h1v1h-1zM9 18h2v1h-2zM12 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM20 18h8v1h-8zM30 18h1v1h-1zM32 18h1v1h-1zM34 18h1v1h-1zM1 19h1v1h-1zM3 19h1v1h-1zM5 19h1v1h-1zM8 19h2v1h-2zM11 19h2v1h-2zM17 19h2v1h-2zM21 19h1v1h-1zM23 19h1v1h-1zM26 19h2v1h-2zM29 19h1v1h-1zM31 19h1v1h-1zM33 19h3v1h-3zM1 20h4v1h-4zM6 20h2v1h-2zM9 20h1v1h-1zM11 20h1v1h-1zM14 20h2v1h-2zM17 20h8v1h-8zM27 20h1v1h-1zM29 20h3v1h-3zM33 20h2v1h-2zM0 21h3v1h-3zM4 21h2v1h-2zM7 21h2v1h-2zM10 21h2v1h-2zM13 21h3v1h-3zM17 21h1v1h-1zM20 21h1v1h-1zM23 21h6v1h-6zM31 21h2v1h-2zM0 22h2v1h-2zM3 22h2v1h-2zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h4v1h-4zM15 22h2v1h-2zM18 22h1v1h-1zM21 22h4v1h-4zM27 22h2v1h-2zM31 22h4v1h-4zM1 23h1v1h-1zM4 23h2v1h-2zM7 23h1v1h-1zM9 23h3v1h-3zM15 23h2v1h-2zM20 23h2v1h-2zM23 23h2v1h-2zM27 23h1v1h-1zM29 23h4v1h-4zM34 23h2v1h-2zM0 24h2v1h-2zM4 24h1v1h-1zM6 24h2v1h-2zM9 24h1v1h-1zM11 24h2v1h-2zM16 24h1v1h-1zM19 24h2v1h-2zM29 24h3v1h-3zM33 24h2v1h-2zM0 25h1v1h-1zM3 25h2v1h-2zM9 25h3v1h-3zM14 25h1v1h-1zM18 25h2v1h-2zM22 25h6v1h-6zM32 25h2v1h-2zM3 26h4v1h-4zM8 26h2v1h-2zM12 26h1v1h-1zM15 26h1v1h-1zM17 26h1v1h-1zM19 26h1v1h-1zM23 26h1v1h-1zM25 26h1v1h-1zM27 26h1v1h-1zM29 26h1v1h-1zM31 26h4v1h-4zM5 27h1v1h-1zM7 27h4v1h-4zM14 27h9v1h-9zM24 27h1v1h-1zM26 27h3v1h-3zM33 27h3v1h-3zM0 28h4v1h-4zM5 28h3v1h-3zM10 28h3v1h-3zM16 28h3v1h-3zM21 28h2v1h-2zM24 28h1v1h-1zM27 28h10v1h-10zM8 29h4v1h-4zM15 29h1v1h-1zM21 29h1v1h-1zM23 29h1v1h-1zM25 29h2v1h-2zM28 29h1v1h-1zM32 29h1v1h-1zM35 29h1v1h-1zM0 30h7v1h-7zM8 30h1v1h-1zM12 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM20 30h1v1h-1zM23 30h1v1h-1zM26 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h1v1h-1zM35 30h1v1h-1zM0 31h1v1h-1zM6 31h1v1h-1zM10 31h1v1h-1zM13 31h3v1h-3zM17 31h3v1h-3zM22 31h3v1h-3zM26 31h1v1h-1zM28 31h1v1h-1zM32 31h3v1h-3zM0 32h1v1h-1zM2 32h3v1h-3zM6 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM18 32h2v1h-2zM22 32h1v1h-1zM28 32h9v1h-9zM0 33h1v1h-1zM2 33h3v1h-3zM6 33h1v1h-1zM9 33h3v1h-3zM16 33h1v1h-1zM19 33h2v1h-2zM23 33h2v1h-2zM26 33h2v1h-2zM29 33h3v1h-3zM36 33h1v1h-1zM0 34h1v1h-1zM2 34h3v1h-3zM6 34h1v1h-1zM9 34h3v1h-3zM13 34h1v1h-1zM16 34h3v1h-3zM20 34h4v1h-4zM25 34h2v1h-2zM28 34h1v1h-1zM30 34h1v1h-1zM34 34h1v1h-1zM0 35h1v1h-1zM6 35h1v1h-1zM11 35h1v1h-1zM13 35h2v1h-2zM17 35h2v1h-2zM21 35h1v1h-1zM23 35h2v1h-2zM26 35h1v1h-1zM32 35h1v1h-1zM34 35h2v1h-2zM0 36h7v1h-7zM8 36h1v1h-1zM11 36h2v1h-2zM14 36h2v1h-2zM17 36h1v1h-1zM19 36h4v1h-4zM24 36h1v1h-1zM29 36h3v1h-3zM34 36h3v1h-3z" fill="currentColor"/></svg></div>
+      <div>
+        <div class="qh">Acesse este portfólio no celular</div>
+        <p>Aponte a câmera para o QR code para abrir a versão online e navegar pelas seções e projetos. Ideal para pais, gestores e visitantes da feira.</p>
       </div>
     </div>
   </section>
@@ -547,6 +642,55 @@
     </div>
   </section>
 </main>
+
+<!-- ALINHAMENTO PEDAGÓGICO (para a coordenação) -->
+<section id="s-alinhamento" class="sec" style="background:var(--card-tint);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Para a coordenação</p>
+      <h2>Alinhamento pedagógico e curricular</h2>
+      <p class="lede">Como o curso conversa com os marcos da rede estadual e da educação básica.</p>
+    </div>
+    <div class="grid align-grid">
+      <div class="align-card">
+        <div class="h">
+          <span class="ib"><svg class="ic" viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5"/></svg></span>
+          <div><span class="tg">Ensino Integral · Novo Ensino Médio</span><h3>Formação Técnica e Profissional</h3></div>
+        </div>
+        <p>Compõe o Itinerário de Formação Técnica e Profissional (FTP), no eixo tecnológico de Informação e Comunicação, articulando a formação geral básica com a habilitação técnica de Desenvolvimento de Sistemas.</p>
+      </div>
+      <div class="align-card">
+        <div class="h">
+          <span class="ib"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg></span>
+          <div><span class="tg">Currículo Paulista · BNCC</span><h3>Competências gerais</h3></div>
+        </div>
+        <p>As atividades do curso desenvolvem competências gerais da Base Nacional Comum Curricular, com destaque para:</p>
+        <div class="comp">
+          <span class="c"><b>02</b> Pensamento crítico e criativo</span>
+          <span class="c"><b>04</b> Comunicação</span>
+          <span class="c"><b>05</b> Cultura digital</span>
+          <span class="c"><b>06</b> Trabalho e projeto de vida</span>
+          <span class="c"><b>09</b> Empatia e cooperação</span>
+          <span class="c"><b>10</b> Responsabilidade e cidadania</span>
+        </div>
+      </div>
+      <div class="align-card">
+        <div class="h">
+          <span class="ib"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3a4 4 0 00-4 4 3.5 3.5 0 00-1 6.8V17a2 2 0 002 2M12 3a4 4 0 014 4 3.5 3.5 0 011 6.8V17a2 2 0 01-2 2M9 21h6M10 19v2M14 19v2"/></svg></span>
+          <div><span class="tg">Metodologias ativas</span><h3>Aprendizagem por projetos</h3></div>
+        </div>
+        <p>Aprendizagem baseada em projetos (mão na massa), trabalho em equipe e resolução de problemas reais — fortalecendo o protagonismo juvenil e o Projeto de Vida do estudante.</p>
+      </div>
+      <div class="align-card">
+        <div class="h">
+          <span class="ib"><svg class="ic" viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5"/></svg></span>
+          <div><span class="tg">Mundo do trabalho</span><h3>Empregabilidade e continuidade</h3></div>
+        </div>
+        <p>Habilitação técnica de nível médio conectada a uma área de alta demanda, abrindo caminhos para emprego, estágio, empreendedorismo e continuidade no ensino superior.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- CTA -->
 <footer id="s-cta" class="cta">
