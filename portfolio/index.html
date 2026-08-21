@@ -251,6 +251,46 @@
     .topbar .school{display:none}
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto}}
+
+  /* ---------- NARRAÇÃO ---------- */
+  .narr{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:center;padding:14px;pointer-events:none}
+  .narr-inner{pointer-events:auto;width:min(720px,100%);background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 -8px 40px -18px rgba(20,10,70,.5),var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap:10px;transition:transform .3s ease}
+  .narr.tucked .narr-inner{transform:translateY(calc(100% + 20px))}
+  .narr-row{display:flex;align-items:center;gap:12px}
+  .narr-btn{flex:none;width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;background:var(--green);color:#fff;display:grid;place-items:center;box-shadow:0 8px 20px -8px rgba(31,166,55,.7);transition:transform .12s}
+  .narr-btn:hover{transform:scale(1.06)}
+  .narr-btn:active{transform:scale(.96)}
+  .narr-btn svg{width:24px;height:24px;fill:currentColor;stroke:none}
+  .narr-mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+  .narr-title{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .narr-title .lab{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);font-weight:700;display:flex;align-items:center;gap:7px}
+  .narr-title .lab .wave{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+  .narr-title .lab .wave i{width:2.5px;background:var(--green);border-radius:2px;height:4px}
+  .narr.playing .wave i{animation:eq .9s ease-in-out infinite}
+  .narr.playing .wave i:nth-child(2){animation-delay:.15s}
+  .narr.playing .wave i:nth-child(3){animation-delay:.3s}
+  .narr.playing .wave i:nth-child(4){animation-delay:.45s}
+  @keyframes eq{0%,100%{height:4px}50%{height:12px}}
+  .narr-step{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted-soft);font-weight:600;letter-spacing:.04em}
+  .narr-cap{font-size:.95rem;color:var(--ink);line-height:1.4;min-height:1.4em;font-weight:500}
+  .narr-cap.idle{color:var(--muted)}
+  .narr-bar{height:4px;border-radius:3px;background:var(--line);overflow:hidden}
+  .narr-bar span{display:block;height:100%;width:0;background:var(--green);transition:width .4s ease}
+  .narr-mini{flex:none;display:flex;gap:6px}
+  .narr-mini button{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;display:grid;place-items:center}
+  .narr-mini button:hover{color:var(--ink);border-color:var(--muted-soft)}
+  .narr-mini button svg{width:18px;height:18px;fill:currentColor;stroke:none}
+  .narr-hint{position:fixed;right:16px;bottom:16px;z-index:59}
+  .narr-launch{pointer-events:auto;display:inline-flex;align-items:center;gap:10px;background:var(--green);color:#fff;border:none;border-radius:999px;padding:13px 20px;font-family:Inter,sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;box-shadow:0 12px 28px -10px rgba(31,166,55,.7);transition:transform .12s,box-shadow .2s}
+  .narr-launch:hover{transform:translateY(-2px)}
+  .narr-launch svg{width:20px;height:20px;fill:currentColor;stroke:none}
+  .narr-warn{font-size:.74rem;color:var(--muted);text-align:center}
+  @media (max-width:560px){
+    .narr{padding:10px}
+    .narr-inner{border-radius:16px}
+    .narr-cap{font-size:.9rem}
+    .narr-launch{padding:11px 16px;font-size:.88rem}
+  }
 </style>
 
 <header class="hero">
@@ -292,7 +332,7 @@
 
 <main>
   <!-- O CURSO -->
-  <section class="sec wrap">
+  <section id="s-curso" class="sec wrap">
     <div class="whatis">
       <div>
         <p class="eyebrow">O curso</p>
@@ -322,7 +362,7 @@
   </section>
 
   <!-- MÃO NA MASSA -->
-  <section class="sec wrap" style="padding-top:0">
+  <section id="s-criar" class="sec wrap" style="padding-top:0">
     <div class="sec-head">
       <p class="eyebrow">Mão na massa</p>
       <h2>No curso, você cria de verdade</h2>
@@ -353,7 +393,7 @@
   </section>
 
   <!-- FERRAMENTAS -->
-  <section class="sec" style="background:var(--card-tint);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <section id="s-ferramentas" class="sec" style="background:var(--card-tint);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">As ferramentas</p>
@@ -372,7 +412,7 @@
   </section>
 
   <!-- MITOS -->
-  <section class="sec wrap">
+  <section id="s-mitos" class="sec wrap">
     <div class="sec-head">
       <p class="eyebrow">Sem medo</p>
       <h2>Esquece o que te disseram</h2>
@@ -397,7 +437,7 @@
   </section>
 
   <!-- NA PRÁTICA / skills -->
-  <section class="sec wrap" style="padding-top:0">
+  <section id="s-pratica" class="sec wrap" style="padding-top:0">
     <div class="sec-head">
       <p class="eyebrow">Na prática</p>
       <h2>Aqui você aprende fazendo</h2>
@@ -414,7 +454,7 @@
   </section>
 
   <!-- STATS -->
-  <section class="sec wrap">
+  <section id="s-mercado" class="sec wrap">
     <div class="stats-band">
       <p class="eyebrow">Por que agora</p>
       <h2 style="font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;max-width:18ch;margin-bottom:40px">A área que mais contrata (e paga bem)</h2>
@@ -432,7 +472,7 @@
   </section>
 
   <!-- PROJETOS NA FEIRA -->
-  <section class="sec wrap" style="padding-top:0">
+  <section id="s-projetos" class="sec wrap" style="padding-top:0">
     <div class="projects">
       <div>
         <p class="eyebrow">Ao vivo na feira</p>
@@ -459,7 +499,7 @@
   </section>
 
   <!-- CAMINHOS -->
-  <section class="sec" style="background:var(--card-tint);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <section id="s-caminhos" class="sec" style="background:var(--card-tint);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Pra onde te leva</p>
@@ -485,7 +525,7 @@
   </section>
 
   <!-- QUIZ -->
-  <section class="sec wrap">
+  <section id="s-teste" class="sec wrap">
     <div class="quiz">
       <p class="eyebrow">Teste você mesmo</p>
       <h2 style="font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:800;margin-bottom:6px">Isso é a sua cara?</h2>
@@ -505,7 +545,7 @@
 </main>
 
 <!-- CTA -->
-<footer class="cta">
+<footer id="s-cta" class="cta">
   <div class="wrap">
     <p class="k">Seu futuro</p>
     <h2>Começa <span class="g">aqui.</span></h2>
@@ -519,7 +559,138 @@
   </div>
 </footer>
 
+<!-- LAUNCHER + PLAYER DE NARRAÇÃO -->
+<div class="narr-hint" id="narrHint">
+  <button class="narr-launch" id="narrLaunch" aria-label="Ouvir explicação em áudio">
+    <svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 001 1h3l4 4V5L7 9H4a1 1 0 00-1 1zm13.5 2a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4zM14 3.2v2.1c2.9.9 5 3.6 5 6.7s-2.1 5.8-5 6.7v2.1c4-1 7-4.6 7-8.8s-3-7.8-7-8.8z"/></svg>
+    Ouvir explicação
+  </button>
+</div>
+
+<div class="narr tucked" id="narr" aria-live="polite">
+  <div class="narr-inner">
+    <div class="narr-row">
+      <button class="narr-btn" id="narrPlay" aria-label="Reproduzir ou pausar narração">
+        <svg id="narrPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <div class="narr-mid">
+        <div class="narr-title">
+          <span class="lab"><span class="wave"><i></i><i></i><i></i><i></i></span>Narração guiada</span>
+          <span class="narr-step" id="narrStep">Toque em play</span>
+        </div>
+        <p class="narr-cap idle" id="narrCap">Um tour em áudio pelo curso — a página acompanha a explicação.</p>
+        <div class="narr-bar"><span id="narrProg"></span></div>
+      </div>
+      <div class="narr-mini">
+        <button id="narrRestart" aria-label="Recomeçar" title="Recomeçar"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 7l5 5V8a5 5 0 11-5 5H5a7 7 0 107-8z"/></svg></button>
+        <button id="narrClose" aria-label="Fechar narração" title="Fechar"><svg viewBox="0 0 24 24"><path d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4 5.7 18.3 4.3 16.9 10.6 12 4.3 5.7l1.4-1.4L10.6 10.6l6.3-6.3z"/></svg></button>
+      </div>
+    </div>
+    <p class="narr-warn" id="narrWarn" style="display:none">Seu navegador não tem voz em português instalada — a leitura pode sair com sotaque. O texto aparece aqui na legenda.</p>
+  </div>
+</div>
+
 <script>
+  /* ---------- Narração (Web Speech API, funciona offline) ---------- */
+  (function(){
+    var synth = window.speechSynthesis;
+    var launch=document.getElementById('narrLaunch');
+    var hint=document.getElementById('narrHint');
+    var panel=document.getElementById('narr');
+    var playBtn=document.getElementById('narrPlay');
+    var playIcon=document.getElementById('narrPlayIcon');
+    var capEl=document.getElementById('narrCap');
+    var stepEl=document.getElementById('narrStep');
+    var progEl=document.getElementById('narrProg');
+    var warnEl=document.getElementById('narrWarn');
+
+    var ICON_PLAY='M8 5v14l11-7z';
+    var ICON_PAUSE='M6 5h4v14H6zM14 5h4v14h-4z';
+
+    // Roteiro: cada trecho tem o texto falado e a seção que a página rola até.
+    var script=[
+      {t:"E-Escola Estadual de Ensino Integral Maria de Lourdes Vieira. Bem-vindo ao portfólio do curso técnico de Desenvolvimento de Sistemas, aqui na Jornada dos Técnicos de 2026. Você usa aplicativos o dia inteiro. Que tal aprender a criá-los?",go:"s-hero"},
+      {t:"Afinal, o que é esse curso? Em uma frase: você aprende a criar tecnologia, e não só usar. Você vai criar sites, aplicativos e jogos de verdade, usar a lógica para resolver problemas do dia a dia e publicar seus projetos para o mundo inteiro usar.",go:"s-curso"},
+      {t:"E é mão na massa. No curso, você cria de verdade: sites que funcionam no celular e no computador, aplicativos, jogos e sistemas que empresas usam. E o melhor: tudo isso vira portfólio, a prova do que você já sabe fazer.",go:"s-criar"},
+      {t:"Estas são as ferramentas que você vai dominar: HTML, CSS e JavaScript para a estrutura, o visual e a interação; Python para a lógica; banco de dados para a informação; e Git com GitHub para controlar as versões. Não precisa saber nada disso agora. É exatamente para isso que serve o curso.",go:"s-ferramentas"},
+      {t:"E pode esquecer o que te disseram. Mito: precisa ser gênio da matemática. Na real, precisa gostar de resolver problemas. Mito: tem que já saber programar. Na real, todo mundo começa do zero, igual a você. Mito: é ficar sozinho no computador. Na real, se cria em equipe, o tempo todo.",go:"s-mitos"},
+      {t:"Aqui você aprende fazendo: resolvendo problemas, trabalhando em equipe, criando do zero, testando, corrigindo e pensando como um verdadeiro desenvolvedor. Você sai criando, não só assistindo.",go:"s-pratica"},
+      {t:"E por que agora? Porque essa é a área que mais contrata e que paga bem. O salário médio de um programador passa de cinco mil e novecentos reais. Foram mais de quatro mil e quinhentas vagas de analista abertas em doze meses, e a previsão é de trinta e três mil novos empregos em tecnologia até o fim de 2026. E dá para trabalhar de casa, para empresas do mundo inteiro.",go:"s-mercado"},
+      {t:"Ao vivo na feira, você pode testar os projetos que alunos como você já criaram. Passe no nosso espaço e pergunte: qual foi a ideia do projeto, que problema ele resolve, quais tecnologias usaram e qual foi o maior desafio.",go:"s-projetos"},
+      {t:"É um curso, mas com muitos caminhos: front-end, back-end, mobile, jogos, dados ou até o seu próprio negócio. E ainda abre portas para emprego, estágio, freelance, faculdade e concurso.",go:"s-caminhos"},
+      {t:"Então, isso é a sua cara? Você curte descobrir como as coisas funcionam? Já quis mudar algo num jogo ou app? Gosta de criar e personalizar coisas? Não desiste fácil de um desafio? Se você marcou pelo menos um, Desenvolvimento de Sistemas é para você.",go:"s-teste"},
+      {t:"Seu futuro começa aqui. Escolha Desenvolvimento de Sistemas. Visite nosso espaço, converse com os estudantes e teste os projetos. Te esperamos na Jornada dos Técnicos!",go:"s-cta"}
+    ];
+
+    var idx=0, started=false, ptVoice=null;
+
+    function pickVoice(){
+      var vs=synth.getVoices()||[];
+      ptVoice = vs.find(function(v){return /pt[-_]BR/i.test(v.lang)})
+             || vs.find(function(v){return /^pt/i.test(v.lang)}) || null;
+      warnEl.style.display = ptVoice ? 'none' : 'block';
+    }
+    pickVoice();
+    if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=pickVoice;
+
+    function setIcon(playing){ playIcon.setAttribute('d', playing?ICON_PAUSE:ICON_PLAY); }
+    function progress(){ progEl.style.width = Math.round((idx)/script.length*100)+'%'; }
+
+    function speak(i){
+      if(i>=script.length){ finish(); return; }
+      idx=i;
+      var seg=script[i];
+      stepEl.textContent='Parte '+(i+1)+' de '+script.length;
+      capEl.textContent=seg.t;
+      capEl.classList.remove('idle');
+      progress();
+      var target=document.getElementById(seg.go);
+      if(target) target.scrollIntoView({behavior:'smooth',block: seg.go==='s-hero'?'start':'center'});
+      var u=new SpeechSynthesisUtterance(seg.t);
+      u.lang='pt-BR'; u.rate=1; u.pitch=1;
+      if(ptVoice) u.voice=ptVoice;
+      u.onend=function(){ if(panel.classList.contains('playing')) speak(i+1); };
+      synth.cancel();
+      synth.speak(u);
+    }
+
+    function finish(){
+      panel.classList.remove('playing'); setIcon(false);
+      stepEl.textContent='Fim'; progEl.style.width='100%';
+      capEl.textContent='Fim da explicação. Toque em recomeçar para ouvir de novo.';
+      capEl.classList.add('idle'); started=false; idx=0;
+    }
+
+    function play(){
+      panel.classList.add('playing'); setIcon(true);
+      if(!started){ started=true; speak(0); }
+      else { synth.resume(); }
+    }
+    function pause(){
+      panel.classList.remove('playing'); setIcon(false); synth.pause();
+    }
+
+    launch.addEventListener('click',function(){
+      hint.style.display='none';
+      panel.classList.remove('tucked');
+      play();
+    });
+    playBtn.addEventListener('click',function(){
+      panel.classList.contains('playing') ? pause() : play();
+    });
+    document.getElementById('narrRestart').addEventListener('click',function(){
+      synth.cancel(); started=false; idx=0; play();
+    });
+    document.getElementById('narrClose').addEventListener('click',function(){
+      synth.cancel(); panel.classList.remove('playing'); panel.classList.add('tucked');
+      setIcon(false); started=false; idx=0; progEl.style.width='0';
+      capEl.classList.add('idle'); capEl.textContent='Um tour em áudio pelo curso — a página acompanha a explicação.';
+      stepEl.textContent='Toque em play'; hint.style.display='block';
+    });
+    window.addEventListener('beforeunload',function(){ synth.cancel(); });
+  })();
+
+  /* ---------- Quiz interativo ---------- */
   (function(){
     var quiz=document.getElementById('quiz');
     var result=document.getElementById('quizResult');
